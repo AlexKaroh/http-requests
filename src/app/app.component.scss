@@ -1,0 +1,95 @@
+:host{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  position: relative;
+  background-color: #007fc9;
+  overflow: hidden;
+
+  &::content{
+    content: '';
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    background-image: url(../assets/clouds-three.webp);
+    animation: animatedBackgroundMain 70s linear infinite;
+  }
+
+  &::after{
+    content: '';
+    margin-left: 10vw;
+    width: 35%;
+    height: 100vh;
+    position: absolute;
+    left: 65%;
+    opacity: 0.5;
+    background-image: url(../assets/cat.png);
+    background-repeat: no-repeat;
+    animation: animatedFalling 10s linear infinite;
+  }
+
+  &::before{
+    content: '';
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    background-image: url(../assets/clouds-three.webp);
+    opacity: .3;
+    animation: animatedBackgroundSecondary 60s linear infinite;
+    pointer-events: none;
+  }
+}
+
+.caption {
+  padding-bottom: 20px;
+  font-weight: 100;
+  text-shadow: 0 -1px 0 #000000, 0 -1px 0 #000000, 0 1px 0 #000000, 0 1px 0 #000000, -1px 0 0 #000000, 1px 0 0 #000000, -1px 0 0 #000000, 1px 0 0 #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 1px 1px 0 #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 1px 1px 0 #000000;
+  font-size: 65px;
+}
+
+.link {
+  cursor: pointer;
+  width: 350px;
+  height: 100px;
+  background: none;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  color: #fff;
+  font-family: "Lilita One", cursive;
+  font-size: 35px;
+  transition: .3s;
+
+  &:hover{
+    scale: 1.1;
+    background: #0000003a;
+  }
+}
+
+@keyframes animatedBackgroundMain {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100% 0;
+  }
+}
+
+@keyframes animatedBackgroundSecondary {
+  0% {
+    background-position: 50% 100%;
+  }
+  100% {
+    background-position: 200% 100%;
+  }
+}
+
+
+@keyframes animatedFalling {
+  0% {
+    background-position: 0 -50vh;
+  }
+  100% {
+    background-position: 0 105vh;
+  }
+}
