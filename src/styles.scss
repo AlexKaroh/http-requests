@@ -5,4 +5,34 @@ body, h1 {
   padding: 0;
   color: #fff;
   font-family: 'Lilita One', cursive;
+  text-shadow: 0 -1px 0 #000000, 0 -1px 0 #000000, 0 1px 0 #000000, 0 1px 0 #000000, -1px 0 0 #000000, 1px 0 0 #000000, -1px 0 0 #000000, 1px 0 0 #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 1px 1px 0 #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 1px 1px 0 #000000;
+}
+
+body {
+  overflow: hidden;
+  &::after {
+    content: '';
+    margin-left: 10vw;
+    width: 24%;
+    height: 815px;
+    position: absolute;
+    left: 45%;
+    overflow: hidden !important;
+    opacity: 0.5;
+    background-image: url(./assets/cat.png);
+    background-repeat: no-repeat;
+    background-size: 60%;
+    animation: animatedFalling 20s linear infinite;
+    z-index: 2;
+  }
+
+}
+
+@keyframes animatedFalling {
+  0% {
+    transform: translateY(-45vh) rotate(0deg);
+  }
+  100% {
+    transform: translateY(145vh) rotate(180deg);
+  }
 }

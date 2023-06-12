@@ -1,0 +1,24 @@
+<form class="form" [formGroup]="userDataForm" (submit)="auth()" *ngIf="!isLoading">
+  <div class="form-info">
+    <label class="label-font" for="username">
+      Name
+    </label>
+    <input type="text" class="input-form" id="username" formControlName="username">
+  </div>
+  <div class="form-info">
+    <label class="label-font" for="password">
+      Password
+    </label>
+    <input type="password" class="input-form" id="password" formControlName="password">
+  </div>
+  <button class="submit-button" type="submit">Sign in</button>
+</form>
+<div *ngIf="isLoading" class="loader"></div>
+<div class="error-container" *ngIf="isRequestError">
+  <span class="error-font">
+    Error :(
+  </span>
+  <span class="error-font">
+    Login or password is invalid
+  </span>
+</div>
