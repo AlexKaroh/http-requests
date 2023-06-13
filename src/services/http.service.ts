@@ -9,11 +9,9 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class HttpService {
-  constructor(private http: HttpClient, private router: Router) {}
+  isAuthInvalid = false;
 
-  isRequestError = false;
-  userToken: string | null = null;
-  userId: number | null = null;
+  constructor(private http: HttpClient, private router: Router) {}
 
   public userAuth(username: string, password: string) {
     return this.http
@@ -25,23 +23,23 @@ export class HttpService {
       .pipe(
         take(1),
         tap((data: UserResponse) => {
-          this.userToken = data.token;
-          this.userId = data.id;
+          sessionStorage.setItem('id', (data.id).toString())
           this.router.navigate(['/todo']);
         }),
         catchError(this.handleError<UserResponse>())
       );
   }
 
-  public getUserToDo(userId: number) {
+  public getUserToDo(userId: string) {
     return this.http.get(`https://dummyjson.com/todos/user/${userId}`).pipe(
-      tap((data) => console.log(data))
+      tap((data) => console.log(data)),
+      catchError(this.handleError<string>())
     );
   }
 
   private handleError<T>(result?: T) {
     return (): Observable<T> => {
-      this.isRequestError = true;
+      this.isAuthInvalid = true;
       return of(result as T);
     };
   }

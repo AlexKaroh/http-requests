@@ -13,12 +13,7 @@
   </div>
   <button class="submit-button" type="submit">Sign in</button>
 </form>
-<div *ngIf="isLoading" class="loader"></div>
-<div class="error-container" *ngIf="isRequestError">
-  <span class="error-font">
-    Error :(
-  </span>
-  <span class="error-font">
-    Login or password is invalid
-  </span>
+<div *ngIf="isLoading" class="loader">Loading...</div>
+<div class="error-container error-font" *ngIf="isAuthInvalid">
+  Login or password is invalid
 </div>

@@ -7,12 +7,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { HttpService } from '../../services/http.service';
-import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
@@ -23,14 +22,17 @@ export class LoginComponent {
   });
   isLoading = false;
 
-  constructor(private fb: FormBuilder, private httpService: HttpService) {}
+  constructor(
+    private fb: FormBuilder,
+    private httpService: HttpService
+  ) {}
 
-  get isRequestError() {
-    return this.httpService.isRequestError;
+  get isAuthInvalid() {
+    return this.httpService.isAuthInvalid;
   }
 
-  set isRequestError(value) {
-    this.httpService.isRequestError = value;
+  set isAuthInvalid(value) {
+    this.httpService.isAuthInvalid = value;
   }
 
   public auth() {
@@ -41,11 +43,11 @@ export class LoginComponent {
     const username = this.userDataForm.get('username')?.value;
     const password = this.userDataForm.get('password')?.value;
     this.isLoading = true;
-    this.isRequestError = false;
+    this.isAuthInvalid = false;
     this.httpService.userAuth(username, password).subscribe({
       next: () => {
         this.isLoading = false;
-      }
+      },
     });
   }
 }
