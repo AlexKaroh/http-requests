@@ -28,69 +28,34 @@
 }
 
 .form {
-  margin-top: 15%;
+  margin-top: 10%;
   width: 350px;
   height: 350px;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-evenly;
   border-radius: 5px;
-  border: 1px solid #000000 !important;
+  border: none !important;
   background: #0000001a;
   z-index: 5;
 }
 
 .form-info {
-  padding: 10px 0;
+  padding: 15% 0 10% 0;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  height: 50%;
 }
 
 .label-font {
   font-size: 30px;
 }
 
-.input-form {
-  height: 35px;
-  border-radius: 5px;
-  padding-left: 5px;
-  font-size: 20px;
-  border: 2px solid #fff;
-  
-  &:focus {
-    outline: none;
-  }
-}
-
-.ng-touched.ng-invalid {
-  border: 2px solid #ff8675;
-}
-
-.submit-button {
-  cursor: pointer;
-  width: 135px;
-  height: 50px;
-  background: none;
-  border: 1px solid #000000;
-  border-radius: 5px;
-  color: #fff;
-  font-family: 'Lilita One', cursive;
-  text-shadow: 0 -1px 0 #000000, 0 -1px 0 #000000, 0 1px 0 #000000, 0 1px 0 #000000, -1px 0 0 #000000, 1px 0 0 #000000, -1px 0 0 #000000, 1px 0 0 #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 1px 1px 0 #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 1px 1px 0 #000000;
-  font-size: 25px;
-  transition: .5s;
-
-  &:hover{
-    scale: 1.1;
-    background: #0000003a;
-    border: 1px solid #d4d4d4;
-  }
-}
-
 .loader {
   margin-top: 15%;
-  height: 450px;
+  height: 400px;
   width: 450px;
   z-index: 5;
   background-image: url(../../assets/loader.gif);
@@ -100,36 +65,11 @@
   text-align: end
 }
 
-.error-container {
-  width: 626px;
-  display: flex;
-  position: absolute;
-  top: 10%;
-  flex-direction: column;
-  text-align: center;
-  border-radius: 5px;
-}
-
 .error-font {
-  font-size: 40px;
+  position: absolute;
+  top: 15px;
+  font-size: 30px;
   z-index: 7;
   color: #ff8675;
 }
 
-@keyframes animatedBackgroundMain {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 100% 0;
-  }
-}
-
-@keyframes animatedBackgroundSecondary {
-  0% {
-    background-position: 50% 70%;
-  }
-  100% {
-    background-position: 200% 70%;
-  }
-}

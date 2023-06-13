@@ -10,6 +10,7 @@ body, h1 {
 
 body {
   overflow: hidden;
+
   &::after {
     content: '';
     margin-left: 10vw;
@@ -25,7 +26,47 @@ body {
     animation: animatedFalling 20s linear infinite;
     z-index: 2;
   }
+}
 
+.button {
+  cursor: pointer;
+  width: 135px;
+  height: 50px;
+  background-color: #007fc9;
+  box-shadow: 0 4px 4px #003f64;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font-family: 'Lilita One', cursive;
+  text-shadow: 0 -1px 0 #000000, 0 -1px 0 #000000, 0 1px 0 #000000, 0 1px 0 #000000, -1px 0 0 #000000, 1px 0 0 #000000, -1px 0 0 #000000, 1px 0 0 #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 1px 1px 0 #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 1px 1px 0 #000000;
+  font-size: 25px;
+  z-index: 5;
+  transition: .3s;
+  
+  &:hover {
+    background-color: #0275b9
+  }
+
+  &:active {
+    transform: translateY(2px);
+    box-shadow: none;
+  }
+}
+
+.input-form {
+  height: 35px;
+  border-radius: 5px;
+  padding-left: 5px;
+  font-size: 20px;
+  border: 3px solid #fff;
+  
+  &:focus {
+    outline: none;
+  }
+}
+
+.ng-touched.ng-invalid {
+  border: 3px solid #ff5c45;
 }
 
 @keyframes animatedFalling {
@@ -34,5 +75,23 @@ body {
   }
   100% {
     transform: translateY(145vh) rotate(180deg);
+  }
+}
+
+@keyframes animatedBackgroundMain {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100% 0;
+  }
+}
+
+@keyframes animatedBackgroundSecondary {
+  0% {
+    background-position: 90% 500%;
+  }
+  100% {
+    background-position: 200% 80%;
   }
 }

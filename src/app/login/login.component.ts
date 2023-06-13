@@ -20,19 +20,15 @@ export class LoginComponent {
     username: ['kminchelle', [Validators.required]],
     password: ['0lelplR', [Validators.required]],
   });
-  isLoading = false;
 
-  constructor(
-    private fb: FormBuilder,
-    private httpService: HttpService
-  ) {}
+  constructor(private fb: FormBuilder, private httpService: HttpService) {}
 
-  get isAuthInvalid() {
-    return this.httpService.isAuthInvalid;
+  get errorMessage() {
+    return this.httpService.errorMessage;
   }
 
-  set isAuthInvalid(value) {
-    this.httpService.isAuthInvalid = value;
+  get isLoading() {
+    return this.httpService.isLoading;
   }
 
   public auth() {
@@ -42,12 +38,6 @@ export class LoginComponent {
     }
     const username = this.userDataForm.get('username')?.value;
     const password = this.userDataForm.get('password')?.value;
-    this.isLoading = true;
-    this.isAuthInvalid = false;
-    this.httpService.userAuth(username, password).subscribe({
-      next: () => {
-        this.isLoading = false;
-      },
-    });
+    this.httpService.userAuth(username, password).subscribe();
   }
 }

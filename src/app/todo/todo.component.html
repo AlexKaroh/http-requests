@@ -1,3 +1,21 @@
-<p>todo works!</p>
-<h1>Hello</h1>
-<button (click)="signOut()">Exit</button>
+<header class="header">
+  <form class="add-todo" (submit)="addTodo()">
+    <input class="input-form" type="text" [formControl]="todoForm">
+    <button class="button" type="submit">Add Todo</button>
+  </form>
+  <div class="navigation">
+    <button class="button" (click)="signOut()">Sign Out</button>
+  </div>
+</header>
+<div class="todos-container">
+  <div class="todo" *ngFor="let todo of todosArr; let i = index">
+    <span class="todo-number">
+      {{i}}.
+    </span>
+    <span class="todo-text">
+      {{todo.todo}}
+    </span>
+    <input class="todo-complete" type="checkbox" [checked]="todo.completed">
+    <button class="delete-button" (click)="removeTodo(todo)">✖</button>
+  </div>
+</div>
