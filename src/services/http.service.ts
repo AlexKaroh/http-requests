@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UserResponse } from 'src/interfaces/user-response';
 import { tap, catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { TodoResponse } from 'src/interfaces/todo-response';
 import { DeletedTodo } from 'src/interfaces/deleted-todo-response';
@@ -12,13 +12,18 @@ import { Todo } from 'src/interfaces/todo';
   providedIn: 'root',
 })
 export class HttpService {
+  private isLoading = new BehaviorSubject<boolean>(false);
   errorMessage = '';
-  isLoading = false;
 
   constructor(private http: HttpClient, private router: Router) {}
 
+  public get isLoading$ (){
+    return this.isLoading.asObservable();
+  }
+
   public userAuth(username: string, password: string) {
-    this.isLoading = true;
+    console.log(1)
+    this.isLoading.next(true);
     return this.http
       .post<UserResponse>(
         'https://dummyjson.com/auth/login',
@@ -61,8 +66,14 @@ export class HttpService {
   }
 
   private handleError(error: HttpErrorResponse) {
-    this.isLoading = false;
+    this.isLoading.next(false);
     this.errorMessage = error.error.message;
     return throwError(() => new Error(this.errorMessage));
+  }
+
+  public signOut() {
+    sessionStorage.removeItem('id');
+    this.router.navigate(['login']);
+    this.isLoading.next(false);
   }
 }

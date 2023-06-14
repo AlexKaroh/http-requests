@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -14,6 +14,7 @@ import { HttpService } from '../../services/http.service';
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {
   userDataForm: FormGroup = this.fb.group({
@@ -27,8 +28,8 @@ export class LoginComponent {
     return this.httpService.errorMessage;
   }
 
-  get isLoading() {
-    return this.httpService.isLoading;
+  get isLoading$() {
+    return this.httpService.isLoading$;
   }
 
   public auth() {

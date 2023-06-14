@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpService } from '../../services/http.service';
 import { Router, RouterModule } from '@angular/router';
@@ -9,6 +9,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-todo',
@@ -16,16 +17,34 @@ import {
   imports: [CommonModule, RouterModule, ReactiveFormsModule, FormsModule],
   templateUrl: './todo.component.html',
   styleUrls: ['./todo.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TodoComponent {
-  todosArr: Todo[] = [];
+  private todoArr = new BehaviorSubject<Todo[]>([]);
   todoForm = new FormControl('', Validators.required);
   userId = sessionStorage.getItem('id') as string;
+  isEdit = false;
 
-  constructor(private httpService: HttpService, private router: Router) {
+  public editTodo() {
+    this.isEdit = !this.isEdit
+  }
+
+  public get todoArr$() {
+    return this.todoArr.asObservable();
+  }
+
+  public signOut() {
+    return this.httpService.signOut();
+  }
+
+  private updateTodoArr(todoArr: Todo[]) {
+    this.todoArr.next(todoArr);
+  }
+
+  constructor(private httpService: HttpService) {
     this.httpService
       .getUserToDo(this.userId)
-      .subscribe((todoList) => (this.todosArr = todoList.todos));
+      .subscribe((todoList) => this.updateTodoArr(todoList.todos));
   }
 
   public addTodo() {
@@ -34,22 +53,19 @@ export class TodoComponent {
       return;
     }
     const todo = this.todoForm.value as string;
-    this.httpService
-      .addUserToDo(todo, this.userId)
-      .subscribe((todo) => this.todosArr.push(todo));
+    this.httpService.addUserToDo(todo, this.userId).subscribe((todo) => {
+      const expandedTodoArr = this.todoArr.value.slice();
+      expandedTodoArr.push(todo);
+      this.updateTodoArr(expandedTodoArr);
+    });
   }
 
-  removeTodo(todo: Todo) {
-    this.httpService
-      .removeUserToDo(todo.id)
-      .subscribe(
-        () =>
-          (this.todosArr = this.todosArr.filter((el) => el.todo !== todo.todo))
+  public removeTodo(todo: Todo) {
+    this.httpService.removeUserToDo(todo.id).subscribe(() => {
+      const filteredTodoArr = this.todoArr.value.filter(
+        (el) => el.todo !== todo.todo
       );
-  }
-
-  signOut() {
-    sessionStorage.removeItem('id');
-    this.router.navigate(['login']);
+      this.updateTodoArr(filteredTodoArr);
+    });
   }
 }

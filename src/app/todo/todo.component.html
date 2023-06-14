@@ -1,4 +1,4 @@
-<header class="header">
+<div class="header">
   <form class="add-todo" (submit)="addTodo()">
     <input class="input-form" type="text" [formControl]="todoForm">
     <button class="button" type="submit">Add Todo</button>
@@ -6,15 +6,19 @@
   <div class="navigation">
     <button class="button" (click)="signOut()">Sign Out</button>
   </div>
-</header>
+</div>
 <div class="todos-container">
-  <div class="todo" *ngFor="let todo of todosArr; let i = index">
+  <div class="todo" *ngFor="let todo of todoArr$ | async; let i = index">
     <span class="todo-number">
-      {{i}}.
+      {{i + 1}}.
     </span>
-    <span class="todo-text">
+    <span class="todo-text" *ngIf="!isEdit">
       {{todo.todo}}
     </span>
+    <input type="text" *ngIf="isEdit">
+    <button class="button small" (click)="editTodo()">
+      Edit
+    </button>
     <input class="todo-complete" type="checkbox" [checked]="todo.completed">
     <button class="delete-button" (click)="removeTodo(todo)">✖</button>
   </div>
