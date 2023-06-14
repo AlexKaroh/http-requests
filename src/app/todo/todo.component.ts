@@ -65,6 +65,7 @@ export class TodoComponent {
       const expandedTodoArr = this.todoArr.value.slice();
       expandedTodoArr.push(todo);
       this.updateTodoArr(expandedTodoArr);
+      this.createTodoForm.reset();
     });
   }
 
