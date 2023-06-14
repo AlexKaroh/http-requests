@@ -80,9 +80,9 @@ export class HttpService {
       .pipe(catchError(this.handleError.bind(this)));
   }
 
-  private handleError(error: HttpErrorResponse) {
+  private handleError(response: HttpErrorResponse) {
     this.setRequestStatus(false);
-    this.errorMessage = error.error.message;
+    this.errorMessage = response.error.message;
     return throwError(() => new Error(this.errorMessage));
   }
 
