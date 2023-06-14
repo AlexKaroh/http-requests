@@ -3,4 +3,5 @@ export interface Todo {
   id: string;
   todo: string;
   userId: number;
+  isEditable?: boolean;
 }

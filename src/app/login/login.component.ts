@@ -14,7 +14,7 @@ import { HttpService } from '../../services/http.service';
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
   userDataForm: FormGroup = this.fb.group({
@@ -22,15 +22,15 @@ export class LoginComponent {
     password: ['0lelplR', [Validators.required]],
   });
 
-  constructor(private fb: FormBuilder, private httpService: HttpService) {}
-
   get errorMessage() {
     return this.httpService.errorMessage;
   }
 
-  get isLoading$() {
-    return this.httpService.isLoading$;
+  get isRequestActive$() {
+    return this.httpService.isRequestActive$;
   }
+
+  constructor(private fb: FormBuilder, private httpService: HttpService) {}
 
   public auth() {
     if (this.userDataForm.invalid) {

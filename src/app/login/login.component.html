@@ -1,4 +1,4 @@
-<form class="form" [formGroup]="userDataForm" (submit)="auth()" *ngIf="!(isLoading$ | async)">
+<form class="form" [formGroup]="userDataForm" (submit)="auth()" *ngIf="!(isRequestActive$ | async)">
   <span class="error-font" *ngIf="errorMessage">
     {{errorMessage}}
   </span>
@@ -14,4 +14,4 @@
   </div>
   <button class="button" type="submit">Sign in</button>
 </form>
-<div *ngIf="isLoading$| async" class="loader">Loading...</div>
+<div *ngIf="isRequestActive$| async" class="loader">Loading...</div>

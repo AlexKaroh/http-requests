@@ -12,18 +12,21 @@ import { Todo } from 'src/interfaces/todo';
   providedIn: 'root',
 })
 export class HttpService {
-  private isLoading = new BehaviorSubject<boolean>(false);
+  private isRequestActive = new BehaviorSubject<boolean>(false);
   errorMessage = '';
+
+  public get isRequestActive$() {
+    return this.isRequestActive.asObservable();
+  }
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  public get isLoading$ (){
-    return this.isLoading.asObservable();
+  private setRequestStatus(status: boolean) {
+    this.isRequestActive.next(status)
   }
 
   public userAuth(username: string, password: string) {
-    console.log(1)
-    this.isLoading.next(true);
+    this.setRequestStatus(true);
     return this.http
       .post<UserResponse>(
         'https://dummyjson.com/auth/login',
@@ -45,7 +48,7 @@ export class HttpService {
       .pipe(catchError(this.handleError.bind(this)));
   }
 
-  public addUserToDo(todo: string , userId: string) {
+  public addUserToDo(todo: string, userId: string) {
     return this.http
       .post<Todo>(
         'https://dummyjson.com/todos/add',
@@ -65,8 +68,20 @@ export class HttpService {
       .pipe(catchError(this.handleError.bind(this)));
   }
 
+  public editUserToDo(todoId: string) {
+    return this.http
+      .put(
+        `https://dummyjson.com/todos/${todoId}`,
+        JSON.stringify({
+          completed: false,
+        }),
+        { headers: { 'Content-Type': 'application/json' } }
+      )
+      .pipe(catchError(this.handleError.bind(this)));
+  }
+
   private handleError(error: HttpErrorResponse) {
-    this.isLoading.next(false);
+    this.setRequestStatus(false);
     this.errorMessage = error.error.message;
     return throwError(() => new Error(this.errorMessage));
   }
@@ -74,6 +89,7 @@ export class HttpService {
   public signOut() {
     sessionStorage.removeItem('id');
     this.router.navigate(['login']);
-    this.isLoading.next(false);
+    this.errorMessage = '';
+    this.setRequestStatus(false);
   }
 }

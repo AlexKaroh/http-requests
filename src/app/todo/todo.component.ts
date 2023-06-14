@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpService } from '../../services/http.service';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { Todo } from 'src/interfaces/todo';
 import {
   FormControl,
@@ -21,16 +21,25 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class TodoComponent {
   private todoArr = new BehaviorSubject<Todo[]>([]);
-  todoForm = new FormControl('', Validators.required);
-  userId = sessionStorage.getItem('id') as string;
-  isEdit = false;
+  private selectedTodo = new BehaviorSubject<Todo | null>(null);
+  createTodoForm = new FormControl('', Validators.required);
 
-  public editTodo() {
-    this.isEdit = !this.isEdit
+  public get selectedTodo$() {
+    return this.selectedTodo.asObservable();
   }
 
   public get todoArr$() {
     return this.todoArr.asObservable();
+  }
+
+  private get userId() {
+    return sessionStorage.getItem('id') as string;
+  }
+
+  constructor(private httpService: HttpService) {
+    this.httpService
+      .getUserToDo(this.userId)
+      .subscribe((todoList) => this.updateTodoArr(todoList.todos));
   }
 
   public signOut() {
@@ -41,19 +50,18 @@ export class TodoComponent {
     this.todoArr.next(todoArr);
   }
 
-  constructor(private httpService: HttpService) {
-    this.httpService
-      .getUserToDo(this.userId)
-      .subscribe((todoList) => this.updateTodoArr(todoList.todos));
+  private selectTodo(todo: Todo | null) {
+    this.selectedTodo.next(todo);
   }
 
   public addTodo() {
-    if (this.todoForm.invalid) {
-      this.todoForm.markAsTouched();
+    if (this.createTodoForm.invalid) {
+      this.createTodoForm.markAsTouched();
       return;
     }
-    const todo = this.todoForm.value as string;
+    const todo = this.createTodoForm.value as string;
     this.httpService.addUserToDo(todo, this.userId).subscribe((todo) => {
+      todo.isEditable = false;
       const expandedTodoArr = this.todoArr.value.slice();
       expandedTodoArr.push(todo);
       this.updateTodoArr(expandedTodoArr);
@@ -66,6 +74,16 @@ export class TodoComponent {
         (el) => el.todo !== todo.todo
       );
       this.updateTodoArr(filteredTodoArr);
+    });
+  }
+
+  public editTodo(i: number) {
+    this.httpService.editUserToDo(this.todoArr.value[i].id).subscribe(() => {
+      if (this.selectedTodo.value === this.todoArr.value[i]) {
+        this.selectTodo(null);
+      } else {
+        this.selectTodo(this.todoArr.value[i]);
+      }
     });
   }
 }

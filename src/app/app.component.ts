@@ -8,8 +8,6 @@ import { LoginComponent } from './login/login.component';
   styleUrls: ['./app.component.scss'],
   standalone: true,
   imports: [LoginComponent, RouterOutlet, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
-  title = 'http-requests';
-}
+export class AppComponent {}
