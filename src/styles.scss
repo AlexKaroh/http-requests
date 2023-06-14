@@ -24,7 +24,7 @@ body {
     height: 100vh;
     position: absolute;
     background-image: url(./assets/clouds-three.webp);
-    animation: animatedBackgroundMain 70s linear infinite;
+    animation: animatedBackgroundMain 150s linear infinite;
   }
 
   &::before{
@@ -34,7 +34,7 @@ body {
     position: absolute;
     background-image: url(./assets/clouds-three.webp);
     opacity: .3;
-    animation: animatedBackgroundSecondary 60s linear infinite;
+    animation: animatedBackgroundSecondary 155s linear infinite;
     pointer-events: none;
   }
 }
@@ -115,9 +115,9 @@ body {
 
 @keyframes animatedBackgroundSecondary {
   0% {
-    background-position: 100% 100%;
+    background-position: 100% 50%;
   }
   100% {
-    background-position: 200% 150%;
+    background-position: 200% 50%;
   }
 }
