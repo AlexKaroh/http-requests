@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UserResponse } from 'src/interfaces/user-response';
 import { tap, catchError } from 'rxjs/operators';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { TodoResponse } from 'src/interfaces/todo-response';
 import { DeletedTodo } from 'src/interfaces/deleted-todo-response';
@@ -22,7 +22,7 @@ export class HttpService {
   constructor(private http: HttpClient, private router: Router) {}
 
   private setRequestStatus(status: boolean) {
-    this.isRequestActive.next(status)
+    this.isRequestActive.next(status);
   }
 
   public userAuth(username: string, password: string) {
