@@ -14,7 +14,7 @@ export const HttpInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((errorResponse: HttpErrorResponse) => {
       httpService.errorMessage = errorResponse.error.message;
       httpService.setRequestStatus(false);
-      throw errorResponse;
+      throw errorResponse.error.message;
     })
   );
 };
