@@ -39,13 +39,13 @@ export class HttpService {
       );
   }
 
-  public getUserToDos(userId: string) {
+  public getUserTodos(userId: string) {
     return this.http.get<UserTodos>(
       `https://dummyjson.com/todos/user/${userId}`
     );
   }
 
-  public addUserToDo(todo: string, userId: string) {
+  public addUserTodo(todo: string, userId: string) {
     return this.http.post<Todo>(
       'https://dummyjson.com/todos/add',
       JSON.stringify({
@@ -56,13 +56,13 @@ export class HttpService {
     );
   }
 
-  public removeUserToDo(todoId: string) {
+  public removeUserTodo(todoId: string) {
     return this.http.delete(
       `https://dummyjson.com/todos/${todoId}`
     );
   }
 
-  public editUserToDo(todoId: string) {
+  public editUserTodo(todoId: string) {
     return this.http.put(
       `https://dummyjson.com/todos/${todoId}`,
       JSON.stringify({

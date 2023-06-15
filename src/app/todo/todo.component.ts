@@ -38,52 +38,52 @@ export class TodoComponent {
 
   constructor(private httpService: HttpService) {
     this.httpService
-      .getUserToDos(this.userId)
-      .subscribe((todoList) => this.updateToDoArr(todoList.todos));
+      .getUserTodos(this.userId)
+      .subscribe((todoList) => this.updateTodoArr(todoList.todos));
   }
 
   public signOut() {
     return this.httpService.signOut();
   }
 
-  private updateToDoArr(todoArr: Todo[]) {
+  private updateTodoArr(todoArr: Todo[]) {
     this.todoArr.next(todoArr);
   }
 
-  private selectToDo(todo: Todo | null) {
+  private selectTodo(todo: Todo | null) {
     this.selectedTodo.next(todo);
   }
 
-  public addToDo() {
+  public addTodo() {
     if (this.createTodoForm.invalid) {
       this.createTodoForm.markAsTouched();
       return;
     }
     const todo = this.createTodoForm.value as string;
-    this.httpService.addUserToDo(todo, this.userId).subscribe((todo) => {
+    this.httpService.addUserTodo(todo, this.userId).subscribe((todo) => {
       todo.isEditable = false;
       const expandedTodoArr = this.todoArr.value.slice();
       expandedTodoArr.push(todo);
-      this.updateToDoArr(expandedTodoArr);
+      this.updateTodoArr(expandedTodoArr);
       this.createTodoForm.reset();
     });
   }
 
-  public removeToDo(todo: Todo) {
-    this.httpService.removeUserToDo(todo.id).subscribe(() => {
+  public removeTodo(todo: Todo) {
+    this.httpService.removeUserTodo(todo.id).subscribe(() => {
       const filteredTodoArr = this.todoArr.value.filter(
         (el) => el.todo !== todo.todo
       );
-      this.updateToDoArr(filteredTodoArr);
+      this.updateTodoArr(filteredTodoArr);
     });
   }
 
-  public editToDo(i: number) {
-    this.httpService.editUserToDo(this.todoArr.value[i].id).subscribe(() => {
+  public editTodo(i: number) {
+    this.httpService.editUserTodo(this.todoArr.value[i].id).subscribe(() => {
       if (this.selectedTodo.value === this.todoArr.value[i]) {
-        this.selectToDo(null);
+        this.selectTodo(null);
       } else {
-        this.selectToDo(this.todoArr.value[i]);
+        this.selectTodo(this.todoArr.value[i]);
       }
     });
   }
