@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpService } from '../../services/http.service';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Todo } from 'src/interfaces/todo';
 import {
   FormControl,
@@ -23,9 +23,14 @@ export class TodoComponent {
   private todoArr = new BehaviorSubject<Todo[]>([]);
   private selectedTodo = new BehaviorSubject<Todo | null>(null);
   private isRequestActive = new BehaviorSubject<boolean>(false);
-  createTodoForm = new FormControl('', Validators.required);
+  private isTodosRequested = new BehaviorSubject<boolean>(false);
 
+  createTodoForm = new FormControl('', Validators.required);
   editTodoForm = new FormControl('', Validators.required);
+
+  public get isTodosRequested$() {
+    return this.isTodosRequested.asObservable();
+  }
 
   public get isRequestActive$() {
     return this.isRequestActive.asObservable();
@@ -43,10 +48,16 @@ export class TodoComponent {
     return sessionStorage.getItem('id') as string;
   }
 
-  constructor(private httpService: HttpService) {
-    this.httpService
-      .getUserTodos(this.userId)
-      .subscribe((todoList) => this.updateTodoArr(todoList.todos));
+  constructor(private httpService: HttpService, private router: Router) {
+    this.setIsTodosRequested(true);
+    this.httpService.getUserTodos(this.userId).subscribe((todoList) => {
+      this.updateTodoArr(todoList.todos);
+      this.setIsTodosRequested(false);
+    });
+  }
+
+  private setIsTodosRequested(value: boolean) {
+    this.isTodosRequested.next(value);
   }
 
   private setIsRequestActive(value: boolean) {
@@ -89,15 +100,28 @@ export class TodoComponent {
     });
   }
 
-  public editTodo(i: number) {
-    if (this.selectedTodo.value === this.todoArr.value[i]) {
+  public editTodo(todo: Todo) {
+    if (
+      this.selectedTodo.value?.todo !== this.editTodoForm.value &&
+      this.selectedTodo.value === todo
+    ) {
       this.setIsRequestActive(true);
-      this.httpService.editUserTodo(this.todoArr.value[i].id).subscribe(() => {
+      this.httpService.editUserTodo(todo.id).subscribe(() => {
+        todo.todo = this.editTodoForm.value as string;
         this.selectTodo(null);
         this.setIsRequestActive(false);
       });
+      return;
+    } else if (this.selectedTodo.value?.todo === this.editTodoForm.value) {
+      this.selectTodo(null);
     } else {
-      this.selectTodo(this.todoArr.value[i]);
+      this.selectTodo(todo);
     }
+    this.editTodoForm.setValue(todo.todo);
+  }
+
+  public signOut() {
+    this.router.navigate(['login']);
+    sessionStorage.removeItem('id');
   }
 }

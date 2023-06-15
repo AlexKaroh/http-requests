@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { HttpService } from '../../services/http.service';
 import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -35,7 +36,11 @@ export class LoginComponent {
     this.isRequestActive.next(value);
   }
 
-  constructor(private fb: FormBuilder, private httpService: HttpService) {}
+  constructor(
+    private fb: FormBuilder,
+    private httpService: HttpService,
+    private router: Router
+  ) {}
 
   public login() {
     if (this.userDataGroup.invalid) {
@@ -47,7 +52,7 @@ export class LoginComponent {
     const password = this.userDataGroup.controls.password.value;
     this.httpService.userLogin(username, password).subscribe({
       next: () => {
-        this.setRequestStatus(false);
+        this.setRequestStatus(false), this.router.navigate(['todo']);
       },
       error: (error) => {
         this.setRequestStatus(false), (this.errorMessage = error);

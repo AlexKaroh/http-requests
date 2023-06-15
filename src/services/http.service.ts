@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserData } from 'src/interfaces/user-data';
 import { tap } from 'rxjs/operators';
-import { BehaviorSubject } from 'rxjs';
-import { Router } from '@angular/router';
 import { UserTodos } from 'src/interfaces/user-todos';
 import { Todo } from 'src/interfaces/todo';
 
@@ -11,7 +9,7 @@ import { Todo } from 'src/interfaces/todo';
   providedIn: 'root',
 })
 export class HttpService {
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient) {}
 
   public userLogin(username: string, password: string) {
     return this.http
@@ -22,7 +20,6 @@ export class HttpService {
       .pipe(
         tap((data: UserData) => {
           sessionStorage.setItem('id', data.id);
-          this.router.navigate(['/todo']);
         })
       );
   }
