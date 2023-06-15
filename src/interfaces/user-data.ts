@@ -1,8 +1,8 @@
-export interface UserResponse {
+export interface UserData {
   email: string;
   firstName: string;
   gender: string;
-  id: number;
+  id: string;
   image: string;
   lastName: string;
   token: string;

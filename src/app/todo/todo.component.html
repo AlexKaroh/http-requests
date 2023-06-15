@@ -1,5 +1,5 @@
 <div class="header">
-  <form class="add-todo" (submit)="addTodo()">
+  <form class="add-todo" (submit)="addToDo()">
     <input class="input-form" type="text" [formControl]="createTodoForm">
     <button class="button" type="submit">Add Todo</button>
   </form>
@@ -16,10 +16,10 @@
       {{todo.todo}}
     </span>
     <input class="edit" type="text" *ngIf="todo === (selectedTodo$ | async)" [(ngModel)]="todo.todo">
-    <button class="button small" (click)="editTodo(i)" [attr.disabled]="todo.isEditable">
+    <button class="button small" (click)="editToDo(i)" [attr.disabled]="todo.isEditable">
       {{todo === (selectedTodo$ | async) ? 'Save' : 'Edit'}}
     </button>
     <input class="todo-complete" type="checkbox" [checked]="todo.completed">
-    <button class="delete-button" (click)="removeTodo(todo)" [attr.disabled]="todo.isEditable">✖</button>
+    <button class="delete-button" (click)="removeToDo(todo)" [attr.disabled]="todo.isEditable">✖</button>
   </div>
 </div>

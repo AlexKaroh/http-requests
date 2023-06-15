@@ -38,23 +38,23 @@ export class TodoComponent {
 
   constructor(private httpService: HttpService) {
     this.httpService
-      .getUserToDo(this.userId)
-      .subscribe((todoList) => this.updateTodoArr(todoList.todos));
+      .getUserToDos(this.userId)
+      .subscribe((todoList) => this.updateToDoArr(todoList.todos));
   }
 
   public signOut() {
     return this.httpService.signOut();
   }
 
-  private updateTodoArr(todoArr: Todo[]) {
+  private updateToDoArr(todoArr: Todo[]) {
     this.todoArr.next(todoArr);
   }
 
-  private selectTodo(todo: Todo | null) {
+  private selectToDo(todo: Todo | null) {
     this.selectedTodo.next(todo);
   }
 
-  public addTodo() {
+  public addToDo() {
     if (this.createTodoForm.invalid) {
       this.createTodoForm.markAsTouched();
       return;
@@ -64,26 +64,26 @@ export class TodoComponent {
       todo.isEditable = false;
       const expandedTodoArr = this.todoArr.value.slice();
       expandedTodoArr.push(todo);
-      this.updateTodoArr(expandedTodoArr);
+      this.updateToDoArr(expandedTodoArr);
       this.createTodoForm.reset();
     });
   }
 
-  public removeTodo(todo: Todo) {
+  public removeToDo(todo: Todo) {
     this.httpService.removeUserToDo(todo.id).subscribe(() => {
       const filteredTodoArr = this.todoArr.value.filter(
         (el) => el.todo !== todo.todo
       );
-      this.updateTodoArr(filteredTodoArr);
+      this.updateToDoArr(filteredTodoArr);
     });
   }
 
-  public editTodo(i: number) {
+  public editToDo(i: number) {
     this.httpService.editUserToDo(this.todoArr.value[i].id).subscribe(() => {
       if (this.selectedTodo.value === this.todoArr.value[i]) {
-        this.selectTodo(null);
+        this.selectToDo(null);
       } else {
-        this.selectTodo(this.todoArr.value[i]);
+        this.selectToDo(this.todoArr.value[i]);
       }
     });
   }

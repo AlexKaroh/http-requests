@@ -1,6 +1,6 @@
 import { Todo } from './todo';
 
-export interface TodoResponse {
+export interface UserTodos {
   limit: number;
   skip: number;
   todos: Todo[];

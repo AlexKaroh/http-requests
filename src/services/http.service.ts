@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { UserResponse } from 'src/interfaces/user-response';
-import { tap, catchError } from 'rxjs/operators';
-import { BehaviorSubject, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { UserData } from 'src/interfaces/user-data';
+import { tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
-import { TodoResponse } from 'src/interfaces/todo-response';
-import { DeletedTodo } from 'src/interfaces/deleted-todo-response';
+import { UserTodos } from 'src/interfaces/user-todos';
 import { Todo } from 'src/interfaces/todo';
 
 @Injectable({
@@ -28,20 +27,20 @@ export class HttpService {
   public userAuth(username: string, password: string) {
     this.setRequestStatus(true);
     return this.http
-      .post<UserResponse>(
+      .post<UserData>(
         'https://dummyjson.com/auth/login',
         JSON.stringify({ username: username, password: password })
       )
       .pipe(
-        tap((data: UserResponse) => {
-          sessionStorage.setItem('id', data.id.toString());
+        tap((data: UserData) => {
+          sessionStorage.setItem('id', data.id);
           this.router.navigate(['/todo']);
         })
       );
   }
 
-  public getUserToDo(userId: string) {
-    return this.http.get<TodoResponse>(
+  public getUserToDos(userId: string) {
+    return this.http.get<UserTodos>(
       `https://dummyjson.com/todos/user/${userId}`
     );
   }
@@ -58,7 +57,7 @@ export class HttpService {
   }
 
   public removeUserToDo(todoId: string) {
-    return this.http.delete<DeletedTodo>(
+    return this.http.delete(
       `https://dummyjson.com/todos/${todoId}`
     );
   }
