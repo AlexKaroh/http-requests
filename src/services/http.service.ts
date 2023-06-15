@@ -30,8 +30,7 @@ export class HttpService {
     return this.http
       .post<UserResponse>(
         'https://dummyjson.com/auth/login',
-        JSON.stringify({ username: username, password: password }),
-        { headers: { 'Content-Type': 'application/json' } }
+        JSON.stringify({ username: username, password: password })
       )
       .pipe(
         tap((data: UserResponse) => {
@@ -56,8 +55,7 @@ export class HttpService {
           todo: todo,
           completed: false,
           userId: userId,
-        }),
-        { headers: { 'Content-Type': 'application/json' } }
+        })
       )
       .pipe(catchError(this.handleError.bind(this)));
   }
@@ -74,8 +72,7 @@ export class HttpService {
         `https://dummyjson.com/todos/${todoId}`,
         JSON.stringify({
           completed: false,
-        }),
-        { headers: { 'Content-Type': 'application/json' } }
+        })
       )
       .pipe(catchError(this.handleError.bind(this)));
   }
