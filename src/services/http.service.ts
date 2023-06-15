@@ -21,7 +21,7 @@ export class HttpService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  private setRequestStatus(status: boolean) {
+  public setRequestStatus(status: boolean) {
     this.isRequestActive.next(status);
   }
 
@@ -36,51 +36,40 @@ export class HttpService {
         tap((data: UserResponse) => {
           sessionStorage.setItem('id', data.id.toString());
           this.router.navigate(['/todo']);
-        }),
-        catchError(this.handleError.bind(this))
+        })
       );
   }
 
   public getUserToDo(userId: string) {
-    return this.http
-      .get<TodoResponse>(`https://dummyjson.com/todos/user/${userId}`)
-      .pipe(catchError(this.handleError.bind(this)));
+    return this.http.get<TodoResponse>(
+      `https://dummyjson.com/todos/user/${userId}`
+    );
   }
 
   public addUserToDo(todo: string, userId: string) {
-    return this.http
-      .post<Todo>(
-        'https://dummyjson.com/todos/add',
-        JSON.stringify({
-          todo: todo,
-          completed: false,
-          userId: userId,
-        })
-      )
-      .pipe(catchError(this.handleError.bind(this)));
+    return this.http.post<Todo>(
+      'https://dummyjson.com/todos/add',
+      JSON.stringify({
+        todo: todo,
+        completed: false,
+        userId: userId,
+      })
+    );
   }
 
   public removeUserToDo(todoId: string) {
-    return this.http
-      .delete<DeletedTodo>(`https://dummyjson.com/todos/${todoId}`)
-      .pipe(catchError(this.handleError.bind(this)));
+    return this.http.delete<DeletedTodo>(
+      `https://dummyjson.com/todos/${todoId}`
+    );
   }
 
   public editUserToDo(todoId: string) {
-    return this.http
-      .put(
-        `https://dummyjson.com/todos/${todoId}`,
-        JSON.stringify({
-          completed: false,
-        })
-      )
-      .pipe(catchError(this.handleError.bind(this)));
-  }
-
-  private handleError(response: HttpErrorResponse) {
-    this.setRequestStatus(false);
-    this.errorMessage = response.error.message;
-    return throwError(() => new Error(this.errorMessage));
+    return this.http.put(
+      `https://dummyjson.com/todos/${todoId}`,
+      JSON.stringify({
+        completed: false,
+      })
+    );
   }
 
   public signOut() {

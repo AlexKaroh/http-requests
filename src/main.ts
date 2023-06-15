@@ -3,11 +3,11 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { routes } from './app/app-routing.module';
 import { AppComponent } from './app/app.component';
-import { HttpRequestInterceptor } from './interceptors/http-request.interceptor';
+import { HttpInterceptor } from './interceptors/http.interceptor';
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
-    provideHttpClient(withInterceptors([HttpRequestInterceptor])),
+    provideHttpClient(withInterceptors([HttpInterceptor])),
   ],
 });
