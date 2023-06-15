@@ -5,6 +5,5 @@ export const todoAuthGuard = () => {
   if (sessionStorage.getItem('id')) {
     return true;
   }
-  inject(Router).navigate(['login']);
-  return false;
+  return inject(Router).createUrlTree(['login']);
 };

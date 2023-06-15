@@ -11,21 +11,9 @@ import { Todo } from 'src/interfaces/todo';
   providedIn: 'root',
 })
 export class HttpService {
-  private isRequestActive = new BehaviorSubject<boolean>(false);
-  errorMessage = '';
-
-  public get isRequestActive$() {
-    return this.isRequestActive.asObservable();
-  }
-
   constructor(private http: HttpClient, private router: Router) {}
 
-  public setRequestStatus(status: boolean) {
-    this.isRequestActive.next(status);
-  }
-
-  public userAuth(username: string, password: string) {
-    this.setRequestStatus(true);
+  public userLogin(username: string, password: string) {
     return this.http
       .post<UserData>(
         'https://dummyjson.com/auth/login',
@@ -57,9 +45,7 @@ export class HttpService {
   }
 
   public removeUserTodo(todoId: string) {
-    return this.http.delete(
-      `https://dummyjson.com/todos/${todoId}`
-    );
+    return this.http.delete(`https://dummyjson.com/todos/${todoId}`);
   }
 
   public editUserTodo(todoId: string) {
@@ -69,12 +55,5 @@ export class HttpService {
         completed: false,
       })
     );
-  }
-
-  public signOut() {
-    sessionStorage.removeItem('id');
-    this.router.navigate(['login']);
-    this.errorMessage = '';
-    this.setRequestStatus(false);
   }
 }

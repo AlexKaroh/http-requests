@@ -1,20 +1,14 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { catchError } from 'rxjs';
-import { HttpService } from 'src/services/http.service';
+import { catchError, throwError } from 'rxjs';
 
-export const HttpInterceptor: HttpInterceptorFn = (req, next) => {
-  const httpService = inject(HttpService);
-
+export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   const setHeaderReq = req.clone({
     setHeaders: { 'Content-Type': 'application/json' },
   });
 
   return next(setHeaderReq).pipe(
     catchError((errorResponse: HttpErrorResponse) => {
-      httpService.errorMessage = errorResponse.error.message;
-      httpService.setRequestStatus(false);
-      throw errorResponse.error.message;
+      return throwError(() => errorResponse.error.message);
     })
   );
 };

@@ -1,4 +1,4 @@
-<form class="form" [formGroup]="userDataForm" (submit)="auth()" *ngIf="!(isRequestActive$ | async)">
+<form class="form" [formGroup]="userDataGroup" (submit)="login()" *ngIf="!(isRequestActive$ | async)">
   <span class="error-font" *ngIf="errorMessage">
     {{errorMessage}}
   </span>

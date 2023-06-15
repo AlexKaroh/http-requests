@@ -7,6 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { HttpService } from '../../services/http.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -17,28 +18,40 @@ import { HttpService } from '../../services/http.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
-  userDataForm: FormGroup = this.fb.group({
+  private isRequestActive = new BehaviorSubject<boolean>(false);
+
+  userDataGroup = this.fb.nonNullable.group({
     username: ['kminchelle', [Validators.required]],
     password: ['0lelplR', [Validators.required]],
   });
 
-  get errorMessage() {
-    return this.httpService.errorMessage;
+  errorMessage = '';
+
+  public get isRequestActive$() {
+    return this.isRequestActive.asObservable();
   }
 
-  get isRequestActive$() {
-    return this.httpService.isRequestActive$;
+  private setRequestStatus(value: boolean) {
+    this.isRequestActive.next(value);
   }
 
   constructor(private fb: FormBuilder, private httpService: HttpService) {}
 
-  public auth() {
-    if (this.userDataForm.invalid) {
-      this.userDataForm.markAllAsTouched();
+  public login() {
+    if (this.userDataGroup.invalid) {
+      this.userDataGroup.markAllAsTouched();
       return;
     }
-    const username = this.userDataForm.get('username')?.value;
-    const password = this.userDataForm.get('password')?.value;
-    this.httpService.userAuth(username, password).subscribe();
+    this.setRequestStatus(true);
+    const username = this.userDataGroup.controls.username.value;
+    const password = this.userDataGroup.controls.password.value;
+    this.httpService.userLogin(username, password).subscribe({
+      next: () => {
+        this.setRequestStatus(false);
+      },
+      error: (error) => {
+        this.setRequestStatus(false), (this.errorMessage = error);
+      },
+    });
   }
 }

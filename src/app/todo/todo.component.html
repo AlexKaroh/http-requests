@@ -1,10 +1,11 @@
+<span>{{isRequestActive$ | async}}</span>
 <div class="header">
   <form class="add-todo" (submit)="addTodo()">
     <input class="input-form" type="text" [formControl]="createTodoForm">
-    <button class="button" type="submit">Add Todo</button>
+    <button class="button" type="submit" [disabled]="isRequestActive$ | async">Add Todo</button>
   </form>
   <div class="navigation">
-    <button class="button" (click)="signOut()">Sign Out</button>
+    <button class="button">Sign Out</button>
   </div>
 </div>
 <div class="todos-container">
@@ -16,10 +17,11 @@
       {{todo.todo}}
     </span>
     <input class="edit" type="text" *ngIf="todo === (selectedTodo$ | async)" [(ngModel)]="todo.todo">
-    <button class="button small" (click)="editTodo(i)" [attr.disabled]="todo.isEditable">
+    {{todo.todo}}
+    <button class="button small" (click)="editTodo(i)" [disabled]="todo.isImmutable || (isRequestActive$ | async)">
       {{todo === (selectedTodo$ | async) ? 'Save' : 'Edit'}}
     </button>
     <input class="todo-complete" type="checkbox" [checked]="todo.completed">
-    <button class="delete-button" (click)="removeTodo(todo)" [attr.disabled]="todo.isEditable">✖</button>
+    <button class="delete-button" (click)="removeTodo(todo)" [disabled]="todo.isImmutable || (isRequestActive$ | async)">✖</button>
   </div>
 </div>
