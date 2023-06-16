@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpService } from '../../services/http.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { UserService } from 'src/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -36,7 +37,7 @@ export class LoginComponent implements OnDestroy {
   constructor(
     private fb: FormBuilder,
     private httpService: HttpService,
-    private router: Router
+    private userService: UserService
   ) {}
 
   public login() {
@@ -48,10 +49,9 @@ export class LoginComponent implements OnDestroy {
     const username = this.userDataGroup.controls.username.value;
     const password = this.userDataGroup.controls.password.value;
     this.subscription = this.httpService.userLogin(username, password).subscribe({
-      next: (todo) => {
+      next: (userData) => {
         this.setRequestStatus(false);
-        sessionStorage.setItem('id', todo.id);
-        this.router.navigate(['todo']);
+        this.userService.signIn(userData);
       },
       error: (error) => {
         this.setRequestStatus(false);

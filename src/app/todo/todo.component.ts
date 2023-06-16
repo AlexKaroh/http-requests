@@ -10,6 +10,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { UserService } from 'src/services/user.service';
 
 @Component({
   selector: 'app-todo',
@@ -43,10 +44,13 @@ export class TodoComponent implements OnDestroy {
   }
 
   private get userId() {
-    return sessionStorage.getItem('id') as string;
+    return this.userService.userId!;
   }
 
-  constructor(private httpService: HttpService, private router: Router) {
+  constructor(
+    private httpService: HttpService,
+    private userService: UserService
+  ) {
     const subscription = this.httpService.getUserTodos(this.userId).subscribe({
       next: (todoList) => {
         this.updateTodoArr(todoList.todos);
@@ -124,18 +128,19 @@ export class TodoComponent implements OnDestroy {
         error: () => this.setIsRequestActive(false),
       });
       return;
-    } 
+    }
     this.selectedTodo = null;
   }
 
   public editTodo(editedTodo: Todo) {
-    this.selectedTodo !== editedTodo ? this.selectedTodo = editedTodo : this.selectedTodo = null;
+    this.selectedTodo !== editedTodo
+      ? (this.selectedTodo = editedTodo)
+      : (this.selectedTodo = null);
     this.editTodoForm.setValue(editedTodo.todo);
   }
 
   public signOut() {
-    this.router.navigate(['login']);
-    sessionStorage.removeItem('id');
+    this.userService.signOut();
   }
 
   ngOnDestroy() {
