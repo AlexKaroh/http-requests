@@ -78,37 +78,37 @@ export class TodoComponent {
     }
     this.setIsRequestActive(true);
     const todo = this.createTodoForm.value as string;
-    this.httpService.addUserTodo(todo, this.userId).subscribe((todo) => {
-      todo.isImmutable = true;
+    this.httpService.addUserTodo(todo, this.userId).subscribe((addedTodo) => {
+      addedTodo.isImmutable = true;
       const extendedTodoArr = this.todoArr.value.slice();
-      extendedTodoArr.push(todo);
+      extendedTodoArr.push(addedTodo);
       this.updateTodoArr(extendedTodoArr);
       this.createTodoForm.reset();
       this.setIsRequestActive(false);
     });
   }
 
-  public removeTodo(todo: Todo) {
+  public removeTodo(removedTodo: Todo) {
     this.setIsRequestActive(true);
-    this.httpService.removeUserTodo(todo.id).subscribe(() => {
+    this.httpService.removeUserTodo(removedTodo.id).subscribe(() => {
       const filteredTodoArr = this.todoArr.value.filter(
-        (el) => el.todo !== todo.todo
+        (el) => el.todo !== removedTodo.todo
       );
       this.updateTodoArr(filteredTodoArr);
       this.setIsRequestActive(false);
     });
   }
 
-  public editTodo(todo: Todo) {
-    if (this.selectedTodo.value !== todo) {
-      this.selectTodo(todo);
+  public editTodo(editedTodo: Todo) {
+    if (this.selectedTodo.value !== editedTodo) {
+      this.selectTodo(editedTodo);
     } else if (
       this.selectedTodo.value?.todo !== this.editTodoForm.value &&
-      this.selectedTodo.value === todo
+      this.selectedTodo.value === editedTodo
     ) {
       this.setIsRequestActive(true);
-      this.httpService.editUserTodo(todo.id).subscribe(() => {
-        todo.todo = this.editTodoForm.value as string;
+      this.httpService.editUserTodo(editedTodo.id).subscribe(() => {
+        editedTodo.todo = this.editTodoForm.value as string;
         this.selectTodo(null);
         this.setIsRequestActive(false);
       });
@@ -116,7 +116,7 @@ export class TodoComponent {
     } else {
       this.selectTodo(null);
     }
-    this.editTodoForm.setValue(todo.todo);
+    this.editTodoForm.setValue(editedTodo.todo);
   }
 
   public signOut() {

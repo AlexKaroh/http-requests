@@ -1,11 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpService } from '../../services/http.service';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
@@ -51,11 +46,14 @@ export class LoginComponent {
     const username = this.userDataGroup.controls.username.value;
     const password = this.userDataGroup.controls.password.value;
     this.httpService.userLogin(username, password).subscribe({
-      next: () => {
-        this.setRequestStatus(false), this.router.navigate(['todo']);
+      next: (todo) => {
+        this.setRequestStatus(false);
+        sessionStorage.setItem('id', todo.id);
+        this.router.navigate(['todo']);
       },
       error: (error) => {
-        this.setRequestStatus(false), (this.errorMessage = error);
+        this.setRequestStatus(false);
+        this.errorMessage = error;
       },
     });
   }

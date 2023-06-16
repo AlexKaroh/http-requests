@@ -5,7 +5,7 @@ export const ROUTES: Routes = [
   {
     path: 'login',
     loadComponent: () =>
-      import('../app/login/login.component').then(
+      import('./login/login.component').then(
         (mod) => mod.LoginComponent
       ),
   },
@@ -13,9 +13,9 @@ export const ROUTES: Routes = [
     path: 'todo',
     canActivate: [todoAuthGuard],
     loadComponent: () =>
-      import('../app/todo/todo.component').then(
+      import('./todo/todo.component').then(
         (mod) => mod.TodoComponent
       ),
   },
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', redirectTo: '/todo', pathMatch: 'full' },
 ];
