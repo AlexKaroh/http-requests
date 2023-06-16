@@ -20,26 +20,36 @@ export class HttpService {
   }
 
   public getUserTodos(userId: string) {
-    return this.http.get<UserTodos>(
-      `${URL}/todos/user/${userId}`
-    );
+    return this.http.get<UserTodos>(`${URL}/todos/user/${userId}`, {
+      withCredentials: true,
+    });
   }
 
   public addUserTodo(todo: string, userId: string) {
-    return this.http.post<Todo>(`${URL}/todos/add`, {
-      todo: todo,
-      completed: false,
-      userId: userId,
-    });
+    return this.http.post<Todo>(
+      `${URL}/todos/add`,
+      {
+        todo: todo,
+        completed: false,
+        userId: userId,
+      },
+      { withCredentials: true }
+    );
   }
 
   public removeUserTodo(todoId: string) {
-    return this.http.delete(`${URL}/todos/${todoId}`);
+    return this.http.delete(`${URL}/todos/${todoId}`, {
+      withCredentials: true,
+    });
   }
 
   public editUserTodo(todoId: string) {
-    return this.http.put(`${URL}/todos/${todoId}`, {
-      completed: false,
-    });
+    return this.http.put(
+      `${URL}/todos/${todoId}`,
+      {
+        completed: false,
+      },
+      { withCredentials: true }
+    );
   }
 }
