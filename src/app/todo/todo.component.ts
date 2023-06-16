@@ -23,7 +23,7 @@ export class TodoComponent {
   private todoArr = new BehaviorSubject<Todo[]>([]);
   private selectedTodo = new BehaviorSubject<Todo | null>(null);
   private isRequestActive = new BehaviorSubject<boolean>(false);
-  private isTodosRequested = new BehaviorSubject<boolean>(false);
+  private isTodosRequested = new BehaviorSubject<boolean>(true);
 
   createTodoForm = new FormControl('', Validators.required);
   editTodoForm = new FormControl('', Validators.required);
@@ -49,7 +49,6 @@ export class TodoComponent {
   }
 
   constructor(private httpService: HttpService, private router: Router) {
-    this.setIsTodosRequested(true);
     this.httpService.getUserTodos(this.userId).subscribe((todoList) => {
       this.updateTodoArr(todoList.todos);
       this.setIsTodosRequested(false);
