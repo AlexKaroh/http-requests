@@ -12,12 +12,15 @@
     <span class="todo-number">
       {{i + 1}}.
     </span>
-    <span class="todo-text" *ngIf="!(todo === (selectedTodo$ | async))">
+    <span class="todo-text" *ngIf="!(todo === selectedTodo)">
       {{todo.todo}}
     </span>
-    <input class="edit" type="text" *ngIf="todo === (selectedTodo$ | async)" [formControl]="editTodoForm">
-    <button class="button small" (click)="editTodo(todo)" [disabled]="isRequestActive$ | async" [class.immutable]="todo.isImmutable">
-      {{todo === (selectedTodo$ | async) ? 'Save' : 'Edit'}}
+    <input class="edit" type="text" *ngIf="todo === selectedTodo" [formControl]="editTodoForm">
+    <button class="button small" (click)="saveTodo(todo)" [disabled]="isRequestActive$ | async" *ngIf="todo === selectedTodo">
+      Save
+    </button> 
+    <button class="button small" (click)="editTodo(todo)" [class.immutable]="todo.isImmutable" *ngIf="!(todo === selectedTodo)">
+      Edit
     </button> 
     <input class="todo-complete" type="checkbox" [checked]="todo.completed">
     <button class="delete-button" (click)="removeTodo(todo)" [disabled]="isRequestActive$ | async" [class.immutable]="todo.isImmutable">✖</button>

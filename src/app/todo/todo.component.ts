@@ -21,7 +21,6 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 })
 export class TodoComponent implements OnDestroy {
   private todoArr = new BehaviorSubject<Todo[]>([]);
-  private selectedTodo = new BehaviorSubject<Todo | null>(null);
   private isRequestActive = new BehaviorSubject<boolean>(false);
   private isTodosRequested = new BehaviorSubject<boolean>(true);
   private subscription: Subscription = new Subscription();
@@ -29,16 +28,14 @@ export class TodoComponent implements OnDestroy {
   createTodoForm = new FormControl('', Validators.required);
   editTodoForm = new FormControl('', Validators.required);
 
+  selectedTodo: Todo | null = null;
+
   public get isTodosRequested$() {
     return this.isTodosRequested.asObservable();
   }
 
   public get isRequestActive$() {
     return this.isRequestActive.asObservable();
-  }
-
-  public get selectedTodo$() {
-    return this.selectedTodo.asObservable();
   }
 
   public get todoArr$() {
@@ -70,10 +67,6 @@ export class TodoComponent implements OnDestroy {
 
   private updateTodoArr(todoArr: Todo[]) {
     this.todoArr.next(todoArr);
-  }
-
-  private selectTodo(todo: Todo | null) {
-    this.selectedTodo.next(todo);
   }
 
   public addTodo() {
@@ -116,26 +109,27 @@ export class TodoComponent implements OnDestroy {
     this.subscription.add(subscription);
   }
 
-  public editTodo(editedTodo: Todo) {
-    if (this.selectedTodo.value !== editedTodo) {
-      this.selectTodo(editedTodo);
-    } else if (
-      this.selectedTodo.value?.todo !== this.editTodoForm.value &&
-      this.selectedTodo.value === editedTodo
+  public saveTodo(savedTodo: Todo) {
+    if (
+      this.selectedTodo!.todo !== this.editTodoForm.value &&
+      this.selectedTodo === savedTodo
     ) {
       this.setIsRequestActive(true);
-      this.httpService.editUserTodo(editedTodo.id).subscribe({
+      this.httpService.editUserTodo(savedTodo.id).subscribe({
         next: () => {
-          editedTodo.todo = this.editTodoForm.value as string;
-          this.selectTodo(null);
+          savedTodo.todo = this.editTodoForm.value as string;
+          this.selectedTodo = null;
           this.setIsRequestActive(false);
         },
         error: () => this.setIsRequestActive(false),
       });
       return;
-    } else {
-      this.selectTodo(null);
-    }
+    } 
+    this.selectedTodo = null;
+  }
+
+  public editTodo(editedTodo: Todo) {
+    this.selectedTodo !== editedTodo ? this.selectedTodo = editedTodo : this.selectedTodo = null;
     this.editTodoForm.setValue(editedTodo.todo);
   }
 
