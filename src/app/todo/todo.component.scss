@@ -1,4 +1,5 @@
 :host {
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -153,9 +154,9 @@
 
 .loader {
   margin-top: 30px;
-  width: 100%;
+  width: 852px;
   height: 608px;
-  background-image: url(../../assets/giphy.gif);
+  background-image: url(../../assets/loader-todos.gif);
   background-color: #005e95;
   background-position: center;
   background-size: 70%;

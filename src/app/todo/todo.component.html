@@ -23,4 +23,4 @@
     <button class="delete-button" (click)="removeTodo(todo)" [disabled]="isRequestActive$ | async" [class.immutable]="todo.isImmutable">✖</button>
   </div>
 </div>
-<div *ngIf="isTodosRequested$ | async" class="loader"></div>
+<div class="loader" *ngIf="isTodosRequested$ | async" ></div>

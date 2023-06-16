@@ -101,7 +101,9 @@ export class TodoComponent {
   }
 
   public editTodo(todo: Todo) {
-    if (
+    if (this.selectedTodo.value !== todo) {
+      this.selectTodo(todo);
+    } else if (
       this.selectedTodo.value?.todo !== this.editTodoForm.value &&
       this.selectedTodo.value === todo
     ) {
@@ -112,10 +114,8 @@ export class TodoComponent {
         this.setIsRequestActive(false);
       });
       return;
-    } else if (this.selectedTodo.value?.todo === this.editTodoForm.value) {
-      this.selectTodo(null);
     } else {
-      this.selectTodo(todo);
+      this.selectTodo(null);
     }
     this.editTodoForm.setValue(todo.todo);
   }
