@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpService } from '../../services/http.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
@@ -13,8 +13,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy {
   private isRequestActive = new BehaviorSubject<boolean>(false);
+
+  subscription: Subscription = new Subscription;
 
   userDataGroup = this.fb.nonNullable.group({
     username: ['kminchelle', [Validators.required]],
@@ -45,7 +47,7 @@ export class LoginComponent {
     this.setRequestStatus(true);
     const username = this.userDataGroup.controls.username.value;
     const password = this.userDataGroup.controls.password.value;
-    this.httpService.userLogin(username, password).subscribe({
+    this.subscription = this.httpService.userLogin(username, password).subscribe({
       next: (todo) => {
         this.setRequestStatus(false);
         sessionStorage.setItem('id', todo.id);
@@ -54,7 +56,11 @@ export class LoginComponent {
       error: (error) => {
         this.setRequestStatus(false);
         this.errorMessage = error;
-      },
+      }
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

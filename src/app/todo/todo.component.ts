@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpService } from '../../services/http.service';
 import { Router, RouterModule } from '@angular/router';
@@ -9,7 +9,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-todo',
@@ -19,11 +19,12 @@ import { BehaviorSubject } from 'rxjs';
   styleUrls: ['./todo.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TodoComponent {
+export class TodoComponent implements OnDestroy {
   private todoArr = new BehaviorSubject<Todo[]>([]);
   private selectedTodo = new BehaviorSubject<Todo | null>(null);
   private isRequestActive = new BehaviorSubject<boolean>(false);
   private isTodosRequested = new BehaviorSubject<boolean>(true);
+  private subscription: Subscription = new Subscription();
 
   createTodoForm = new FormControl('', Validators.required);
   editTodoForm = new FormControl('', Validators.required);
@@ -49,10 +50,14 @@ export class TodoComponent {
   }
 
   constructor(private httpService: HttpService, private router: Router) {
-    this.httpService.getUserTodos(this.userId).subscribe((todoList) => {
-      this.updateTodoArr(todoList.todos);
-      this.setIsTodosRequested(false);
+    const subscription = this.httpService.getUserTodos(this.userId).subscribe({
+      next: (todoList) => {
+        this.updateTodoArr(todoList.todos);
+        this.setIsTodosRequested(false);
+      },
+      error: () => this.setIsTodosRequested(false),
     });
+    this.subscription.add(subscription);
   }
 
   private setIsTodosRequested(value: boolean) {
@@ -78,25 +83,37 @@ export class TodoComponent {
     }
     this.setIsRequestActive(true);
     const todo = this.createTodoForm.value as string;
-    this.httpService.addUserTodo(todo, this.userId).subscribe((addedTodo) => {
-      addedTodo.isImmutable = true;
-      const extendedTodoArr = this.todoArr.value.slice();
-      extendedTodoArr.push(addedTodo);
-      this.updateTodoArr(extendedTodoArr);
-      this.createTodoForm.reset();
-      this.setIsRequestActive(false);
-    });
+    const subscription = this.httpService
+      .addUserTodo(todo, this.userId)
+      .subscribe({
+        next: (addedTodo) => {
+          addedTodo.isImmutable = true;
+          const extendedTodoArr = this.todoArr.value.slice();
+          extendedTodoArr.push(addedTodo);
+          this.updateTodoArr(extendedTodoArr);
+          this.createTodoForm.reset();
+          this.setIsRequestActive(false);
+        },
+        error: () => this.setIsRequestActive(false),
+      });
+    this.subscription.add(subscription);
   }
 
   public removeTodo(removedTodo: Todo) {
     this.setIsRequestActive(true);
-    this.httpService.removeUserTodo(removedTodo.id).subscribe(() => {
-      const filteredTodoArr = this.todoArr.value.filter(
-        (el) => el.todo !== removedTodo.todo
-      );
-      this.updateTodoArr(filteredTodoArr);
-      this.setIsRequestActive(false);
-    });
+    const subscription = this.httpService
+      .removeUserTodo(removedTodo.id)
+      .subscribe({
+        next: () => {
+          const filteredTodoArr = this.todoArr.value.filter(
+            (el) => el.todo !== removedTodo.todo
+          );
+          this.updateTodoArr(filteredTodoArr);
+          this.setIsRequestActive(false);
+        },
+        error: () => this.setIsRequestActive(false),
+      });
+    this.subscription.add(subscription);
   }
 
   public editTodo(editedTodo: Todo) {
@@ -107,10 +124,13 @@ export class TodoComponent {
       this.selectedTodo.value === editedTodo
     ) {
       this.setIsRequestActive(true);
-      this.httpService.editUserTodo(editedTodo.id).subscribe(() => {
-        editedTodo.todo = this.editTodoForm.value as string;
-        this.selectTodo(null);
-        this.setIsRequestActive(false);
+      this.httpService.editUserTodo(editedTodo.id).subscribe({
+        next: () => {
+          editedTodo.todo = this.editTodoForm.value as string;
+          this.selectTodo(null);
+          this.setIsRequestActive(false);
+        },
+        error: () => this.setIsRequestActive(false),
       });
       return;
     } else {
@@ -122,5 +142,9 @@ export class TodoComponent {
   public signOut() {
     this.router.navigate(['login']);
     sessionStorage.removeItem('id');
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

@@ -18,7 +18,7 @@
     <input class="edit" type="text" *ngIf="todo === (selectedTodo$ | async)" [formControl]="editTodoForm">
     <button class="button small" (click)="editTodo(todo)" [disabled]="isRequestActive$ | async" [class.immutable]="todo.isImmutable">
       {{todo === (selectedTodo$ | async) ? 'Save' : 'Edit'}}
-    </button>
+    </button> 
     <input class="todo-complete" type="checkbox" [checked]="todo.completed">
     <button class="delete-button" (click)="removeTodo(todo)" [disabled]="isRequestActive$ | async" [class.immutable]="todo.isImmutable">✖</button>
   </div>
