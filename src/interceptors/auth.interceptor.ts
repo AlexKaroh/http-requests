@@ -5,9 +5,10 @@ import { UserService } from 'src/services/user.service';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const setHeaderAuth = req.clone({
     setHeaders: { Authorization: `Bearer ${inject(UserService).userToken}` },
+    withCredentials: false
   });
 
   return req.withCredentials
-    ? next(setHeaderAuth.clone({ withCredentials: false }))
+    ? next(setHeaderAuth)
     : next(req);
 };
