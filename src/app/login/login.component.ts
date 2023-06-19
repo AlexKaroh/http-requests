@@ -16,8 +16,7 @@ import { UserService } from 'src/services/user.service';
 })
 export class LoginComponent implements OnDestroy {
   private isRequestActive = new BehaviorSubject<boolean>(false);
-
-  subscription: Subscription = new Subscription;
+  private subscription: Subscription = new Subscription;
 
   userDataGroup = this.fb.nonNullable.group({
     username: ['kminchelle', [Validators.required]],
@@ -37,7 +36,8 @@ export class LoginComponent implements OnDestroy {
   constructor(
     private fb: FormBuilder,
     private httpService: HttpService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {}
 
   public login() {
@@ -52,6 +52,7 @@ export class LoginComponent implements OnDestroy {
       next: (userData) => {
         this.setRequestStatus(false);
         this.userService.signIn(userData);
+        this.router.navigate(['todo']);
       },
       error: (error) => {
         this.setRequestStatus(false);

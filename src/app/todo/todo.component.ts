@@ -9,7 +9,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription, takeUntil } from 'rxjs';
 import { UserService } from 'src/services/user.service';
 
 @Component({
@@ -24,12 +24,12 @@ export class TodoComponent implements OnDestroy {
   private todoArr = new BehaviorSubject<Todo[]>([]);
   private isRequestActive = new BehaviorSubject<boolean>(false);
   private isTodosRequested = new BehaviorSubject<boolean>(true);
-  private subscription: Subscription = new Subscription();
+  private destroyStream = new Subject<void>();
+
+  selectedTodo: Todo | null = null;
 
   createTodoForm = new FormControl('', Validators.required);
   editTodoForm = new FormControl('', Validators.required);
-
-  selectedTodo: Todo | null = null;
 
   public get isTodosRequested$() {
     return this.isTodosRequested.asObservable();
@@ -49,16 +49,19 @@ export class TodoComponent implements OnDestroy {
 
   constructor(
     private httpService: HttpService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {
-    const subscription = this.httpService.getUserTodos(this.userId).subscribe({
-      next: (todoList) => {
-        this.updateTodoArr(todoList.todos);
-        this.setIsTodosRequested(false);
-      },
-      error: () => this.setIsTodosRequested(false),
-    });
-    this.subscription.add(subscription);
+    this.httpService
+      .getUserTodos(this.userId)
+      .pipe(takeUntil(this.destroyStream))
+      .subscribe({
+        next: (todoList) => {
+          this.updateTodoArr(todoList.todos);
+          this.setIsTodosRequested(false);
+        },
+        error: () => this.setIsTodosRequested(false),
+      });
   }
 
   private setIsTodosRequested(value: boolean) {
@@ -80,8 +83,9 @@ export class TodoComponent implements OnDestroy {
     }
     this.setIsRequestActive(true);
     const todo = this.createTodoForm.value as string;
-    const subscription = this.httpService
+    this.httpService
       .addUserTodo(todo, this.userId)
+      .pipe(takeUntil(this.destroyStream))
       .subscribe({
         next: (addedTodo) => {
           addedTodo.isImmutable = true;
@@ -93,13 +97,13 @@ export class TodoComponent implements OnDestroy {
         },
         error: () => this.setIsRequestActive(false),
       });
-    this.subscription.add(subscription);
   }
 
   public removeTodo(removedTodo: Todo) {
     this.setIsRequestActive(true);
-    const subscription = this.httpService
+    this.httpService
       .removeUserTodo(removedTodo.id)
+      .pipe(takeUntil(this.destroyStream))
       .subscribe({
         next: () => {
           const filteredTodoArr = this.todoArr.value.filter(
@@ -110,7 +114,6 @@ export class TodoComponent implements OnDestroy {
         },
         error: () => this.setIsRequestActive(false),
       });
-    this.subscription.add(subscription);
   }
 
   public saveTodo(savedTodo: Todo) {
@@ -119,31 +122,34 @@ export class TodoComponent implements OnDestroy {
       this.selectedTodo === savedTodo
     ) {
       this.setIsRequestActive(true);
-      this.httpService.editUserTodo(savedTodo.id).subscribe({
-        next: () => {
-          savedTodo.todo = this.editTodoForm.value as string;
-          this.selectedTodo = null;
-          this.setIsRequestActive(false);
-        },
-        error: () => this.setIsRequestActive(false),
-      });
+      this.httpService
+        .editUserTodo(savedTodo.id)
+        .pipe(takeUntil(this.destroyStream))
+        .subscribe({
+          next: () => {
+            savedTodo.todo = this.editTodoForm.value as string;
+            this.selectedTodo = null;
+            this.setIsRequestActive(false);
+          },
+          error: () => this.setIsRequestActive(false),
+        });
       return;
     }
     this.selectedTodo = null;
   }
 
   public editTodo(editedTodo: Todo) {
-    this.selectedTodo !== editedTodo
-      ? (this.selectedTodo = editedTodo)
-      : (this.selectedTodo = null);
+    this.selectedTodo = this.selectedTodo !== editedTodo ? editedTodo : null;
     this.editTodoForm.setValue(editedTodo.todo);
   }
 
   public signOut() {
     this.userService.signOut();
+    this.router.navigate(['login']);
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.destroyStream.next();
+    this.destroyStream.complete();
   }
 }
