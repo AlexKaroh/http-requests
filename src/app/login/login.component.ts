@@ -16,7 +16,7 @@ import { UserService } from 'src/services/user.service';
 })
 export class LoginComponent implements OnDestroy {
   private isRequestActive = new BehaviorSubject<boolean>(false);
-  private subscription: Subscription = new Subscription;
+  private subscription: Subscription = new Subscription();
 
   userDataGroup = this.fb.nonNullable.group({
     username: ['kminchelle', [Validators.required]],
@@ -48,17 +48,19 @@ export class LoginComponent implements OnDestroy {
     this.setRequestStatus(true);
     const username = this.userDataGroup.controls.username.value;
     const password = this.userDataGroup.controls.password.value;
-    this.subscription = this.httpService.userLogin(username, password).subscribe({
-      next: (userData) => {
-        this.setRequestStatus(false);
-        this.userService.signIn(userData);
-        this.router.navigate(['todo']);
-      },
-      error: (error) => {
-        this.setRequestStatus(false);
-        this.errorMessage = error;
-      }
-    });
+    this.subscription = this.httpService
+      .userLogin(username, password)
+      .subscribe({
+        next: (userData) => {
+          this.setRequestStatus(false);
+          this.userService.signIn(userData);
+          this.router.navigate(['todo']);
+        },
+        error: (error) => {
+          this.setRequestStatus(false);
+          this.errorMessage = error;
+        },
+      });
   }
 
   ngOnDestroy() {
