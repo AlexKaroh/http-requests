@@ -44,6 +44,14 @@
       "rules": {
         "@angular-eslint/template/no-negated-async": "off"
       }
+    },
+    {
+      "files": [
+        "*.ts"
+      ],
+      "extends": [
+        "plugin:@ngrx/all"
+      ]
     }
   ]
 }

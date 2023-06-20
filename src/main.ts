@@ -5,10 +5,18 @@ import { AppComponent } from './app/app.component';
 import { ROUTES } from './app/app.routes';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { httpInterceptor } from './interceptors/http.interceptor';
+import { provideStore } from '@ngrx/store';
+import { reducers, metaReducers } from './app/reducers';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { isDevMode } from '@angular/core';
+import { provideEffects } from '@ngrx/effects';
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(ROUTES),
     provideHttpClient(withInterceptors([httpInterceptor, authInterceptor])),
-  ],
+    provideStore(reducers, { metaReducers }),
+    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
+    provideEffects()
+],
 });
