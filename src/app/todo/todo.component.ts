@@ -9,7 +9,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { BehaviorSubject, Subject, Subscription, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { UserService } from 'src/services/user.service';
 
 @Component({
@@ -44,7 +44,7 @@ export class TodoComponent implements OnDestroy {
   }
 
   private get userId() {
-    return this.userService.userId!;
+    return this.userService.userId as string;
   }
 
   constructor(
@@ -118,7 +118,7 @@ export class TodoComponent implements OnDestroy {
 
   public saveTodo(savedTodo: Todo) {
     if (
-      this.selectedTodo!.todo !== this.editTodoForm.value &&
+      this.selectedTodo?.todo !== this.editTodoForm.value &&
       this.selectedTodo === savedTodo
     ) {
       this.setIsRequestActive(true);
