@@ -6,6 +6,7 @@ import { Todo } from 'src/interfaces/todo';
 
 const URL = 'https://dummyjson.com';
 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -37,14 +38,14 @@ export class HttpService {
     );
   }
 
-  public removeUserTodo(todoId: string) {
-    return this.http.delete(`${URL}/todos/${todoId}`, {
+  public removeUserTodo(todoId : string) {
+    return this.http.delete<Todo>(`${URL}/todos/${todoId}`, {
       withCredentials: true,
     });
   }
 
   public editUserTodo(todoId: string) {
-    return this.http.put(
+    return this.http.put<Todo>(
       `${URL}/todos/${todoId}`,
       {
         completed: false,

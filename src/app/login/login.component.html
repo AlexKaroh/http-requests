@@ -1,6 +1,6 @@
 <form class="form" [formGroup]="userDataGroup" (submit)="login()" *ngIf="!(isRequestActive$ | async)">
-  <span class="error-font" *ngIf="errorMessage">
-    {{errorMessage}}
+  <span class="error-font">
+    {{ errorMessage$ | async }}
   </span>
   <div class="form-info">
     <label class="label-font" for="username">

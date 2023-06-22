@@ -7,7 +7,7 @@ export const ROUTES: Routes = [
     loadComponent: () =>
       import('./login/login.component').then(
         (mod) => mod.LoginComponent
-      ),
+      )
   },
   {
     path: 'todo',

@@ -7,23 +7,23 @@
     <button class="button" (click)="signOut()">Sign Out</button>
   </div>
 </div>
-<div class="todos-container" *ngIf="!(isTodosRequested$ | async)">
-  <div class="todo" *ngFor="let todo of todoArr$ | async; let i = index">
+<div class="todos-container" *ngIf="!(isFirstRequest$ | async)">
+  <div class="todo" *ngFor="let todo of todosList$ | async; let i = index">
     <span class="todo-number">
       {{i + 1}}.
     </span>
-    <span class="todo-text" *ngIf="!(todo === selectedTodo)">
+    <span class="todo-text" *ngIf="!(todo === (selectedTodo$ | async))">
       {{todo.todo}}
     </span>
-    <input class="edit" type="text" *ngIf="todo === selectedTodo" [formControl]="editTodoForm">
-    <button class="button small" (click)="saveTodo(todo)" [disabled]="isRequestActive$ | async" *ngIf="todo === selectedTodo">
+    <input class="edit" type="text" *ngIf="todo === (selectedTodo$ | async)" [formControl]="editTodoForm">
+    <button class="button small" (click)="saveTodo(todo)" [disabled]="isRequestActive$ | async" *ngIf="todo === (selectedTodo$ | async)">
       Save
     </button> 
-    <button class="button small" (click)="editTodo(todo)" [class.immutable]="todo.isImmutable" *ngIf="!(todo === selectedTodo)">
+    <button class="button small" (click)="selectTodo(todo)" [class.immutable]="todo.isImmutable" *ngIf="!(todo === (selectedTodo$ | async))">
       Edit
     </button> 
     <input class="todo-complete" type="checkbox" [checked]="todo.completed">
-    <button class="delete-button" (click)="removeTodo(todo)" [disabled]="isRequestActive$ | async" [class.immutable]="todo.isImmutable">✖</button>
+    <button class="delete-button" (click)="removeTodo(todo.id)" [disabled]="isRequestActive$ | async" [class.immutable]="todo.isImmutable">✖</button>
   </div>
 </div>
-<div class="loader" *ngIf="isTodosRequested$ | async" ></div>
+<div class="loader" *ngIf="(isRequestActive$ | async) && (isFirstRequest$ | async)"></div>

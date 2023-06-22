@@ -7,4 +7,5 @@ export interface UserData {
   lastName: string;
   token: string;
   username: string;
+  errorMessage?: string;
 }

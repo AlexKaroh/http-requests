@@ -1,10 +1,16 @@
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserService } from 'src/services/user.service';
+import { Store } from '@ngrx/store';
+import { map, take } from 'rxjs';
+import { userSuccessSelector } from 'src/app/state/user-auth/user-auth.selector';
 
 export const todoAuthGuard = () => {
-  if (inject(UserService).userId) {
-    return true;
-  }
-  return inject(Router).createUrlTree(['login']);
+  inject(Store)
+    .select(userSuccessSelector)
+    .pipe(
+      take(1),
+      map((status) => {
+        return status ? true : inject(Router).navigate(['login']);
+      })
+    ).subscribe();
 };

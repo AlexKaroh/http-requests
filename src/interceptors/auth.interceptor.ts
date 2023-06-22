@@ -1,14 +1,19 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { UserService } from 'src/services/user.service';
+import { Store } from '@ngrx/store';
+import { switchMap } from 'rxjs';
+import { userTokenSelector } from 'src/app/state/user-auth/user-auth.selector';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const setHeaderAuth = req.clone({
-    setHeaders: { Authorization: `Bearer ${inject(UserService).userToken}` },
-    withCredentials: false
-  });
-
-  return req.withCredentials
-    ? next(setHeaderAuth)
-    : next(req);
+  return inject(Store)
+    .select(userTokenSelector)
+    .pipe(
+      switchMap((userToken) => {
+        const modifiedReq = req.clone({
+          setHeaders: { Authorization: `Bearer ${userToken}` },
+          withCredentials: false,
+        });
+        return req.withCredentials ? next(modifiedReq) : next(req);
+      })
+    );
 };
