@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { Todo } from 'src/interfaces/todo';
 import {
   FormControl,
@@ -47,7 +47,7 @@ export class TodoComponent {
 
   private userId?: string;
 
-  constructor(private router: Router, private store: Store) {
+  constructor(private store: Store) {
     this.userId$
       .pipe(
         take(1),
