@@ -6,7 +6,6 @@ const COMPONENT_NAME = 'Todo';
 
 export const loadTodos = createAction(
   `${COMPONENT_NAME} List Load`,
-  props<{ userId: string | undefined }>()
 );
 
 export const loadSuccess = createAction(
@@ -26,7 +25,7 @@ export const addTodo = createAction(
 
 export const addTodoSuccess = createAction(
   `${COMPONENT_NAME} Add Success`,
-  props<{ todo: Todo }>()
+  props<{ newTodo: Todo }>()
 );
 
 export const addTodoFailure = createAction(
@@ -51,12 +50,12 @@ export const removeTodoFailure = createAction(
 
 export const editTodo = createAction(
   `${COMPONENT_NAME} Edit`,
-  props<{ todoId: string , newTodo: string }>()
+  props<{ todoId: string; newTodo: string }>()
 );
 
 export const editTodoSuccess = createAction(
   `${COMPONENT_NAME} Edit Success`,
-  props<{ editedTodo: Todo, newTodo: string }>()
+  props<{ editedTodo: Todo; newTodo: string }>()
 );
 
 export const editTodoFailure = createAction(
@@ -69,6 +68,4 @@ export const selectTodo = createAction(
   props<{ selectedTodo: Todo }>()
 );
 
-export const clearSelectTodo = createAction(
-  `${COMPONENT_NAME} Unselect`
-);
+export const clearSelectTodo = createAction(`${COMPONENT_NAME} Unselect`);

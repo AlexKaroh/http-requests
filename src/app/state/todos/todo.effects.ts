@@ -1,16 +1,18 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, exhaustMap, map, of, take } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { catchError, exhaustMap, map, of, withLatestFrom } from 'rxjs';
 import { HttpService } from 'src/services/http.service';
+import { userIdSelector } from '../user-auth/user-auth.selector';
 import * as TodoActions from './todo.actions';
 
 export const loadTodos$ = createEffect(
-  (actions$ = inject(Actions), httpService = inject(HttpService)) => {
+  (actions$ = inject(Actions), httpService = inject(HttpService), store = inject(Store)) => {
     return actions$.pipe(
       ofType(TodoActions.loadTodos),
-      exhaustMap((action) =>
-        httpService.getUserTodos(action.userId as string).pipe(
-          take(1),
+      withLatestFrom(store.select(userIdSelector)),
+      exhaustMap(([, userId]) =>
+        httpService.getUserTodos(userId).pipe(
           map((userTodos) => TodoActions.loadSuccess({ userTodos })),
           catchError((error) => of(TodoActions.loadFailure({ error })))
         )
@@ -20,14 +22,19 @@ export const loadTodos$ = createEffect(
   { functional: true }
 );
 
+
 export const addTodo$ = createEffect(
-  (actions$ = inject(Actions), httpService = inject(HttpService)) => {
+  (actions$ = inject(Actions), httpService = inject(HttpService), store = inject(Store)) => {
     return actions$.pipe(
       ofType(TodoActions.addTodo),
-      exhaustMap((action) =>
-        httpService.addUserTodo(action.todo, action.userId as string).pipe(
-          take(1),
-          map((todo) => TodoActions.addTodoSuccess({ todo })),
+      withLatestFrom(store.select(userIdSelector)),
+      exhaustMap(([action, userId]) =>
+        httpService.addUserTodo(action.todo, userId as string).pipe(
+          map((todo) => {
+            return TodoActions.addTodoSuccess({
+              newTodo: { ...todo, isImmutable: true },
+            });
+          }),
           catchError((error) => of(TodoActions.addTodoFailure({ error })))
         )
       )
@@ -42,7 +49,6 @@ export const removeTodo$ = createEffect(
       ofType(TodoActions.removeTodo),
       exhaustMap((action) =>
         httpService.removeUserTodo(action.todoId).pipe(
-          take(1),
           map((deletedTodo) => TodoActions.removeTodoSuccess({ deletedTodo })),
           catchError((error) => of(TodoActions.removeTodoFailure({ error })))
         )
@@ -58,7 +64,6 @@ export const editTodo$ = createEffect(
       ofType(TodoActions.editTodo),
       exhaustMap((action) =>
         httpService.editUserTodo(action.todoId).pipe(
-          take(1),
           map((editedTodo) =>
             TodoActions.editTodoSuccess({ editedTodo, newTodo: action.newTodo })
           ),
@@ -69,4 +74,3 @@ export const editTodo$ = createEffect(
   },
   { functional: true }
 );
-

@@ -8,7 +8,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { take, tap } from 'rxjs';
+import { take } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
   addTodo,
@@ -45,16 +45,8 @@ export class TodoComponent {
   isFirstRequest$ = this.store.select(isFirstRequestSelector);
   selectedTodo$ = this.store.select(selectedTodoSelector);
 
-  private userId?: string;
-
   constructor(private store: Store) {
-    this.userId$
-      .pipe(
-        take(1),
-        tap((userId) => (this.userId = userId))
-      )
-      .subscribe();
-    this.store.dispatch(loadTodos({ userId: this.userId }));
+    this.store.dispatch(loadTodos());
   }
 
   public addTodo() {
@@ -63,7 +55,7 @@ export class TodoComponent {
       return;
     }
     const todo = this.createTodoForm.value as string;
-    this.store.dispatch(addTodo({ todo, userId: this.userId }));
+    this.store.dispatch(addTodo({ todo }));
     this.createTodoForm.reset();
   }
 
@@ -72,23 +64,18 @@ export class TodoComponent {
   }
 
   public saveTodo(savedTodo: Todo) {
-    this.selectedTodo$
-      .pipe(
-        take(1),
-        tap((todo) => {
-          if (todo?.todo !== this.editTodoForm.value) {
-            this.store.dispatch(
-              editTodo({
-                todoId: savedTodo.id,
-                newTodo: this.editTodoForm.value as string,
-              })
-            );
-            return;
-          }
-          this.store.dispatch(clearSelectTodo());
-        })
-      )
-      .subscribe();
+    this.selectedTodo$.pipe(take(1)).subscribe((selectedTodo) => {
+      if (selectedTodo?.todo !== this.editTodoForm.value) {
+        this.store.dispatch(
+          editTodo({
+            todoId: savedTodo.id,
+            newTodo: this.editTodoForm.value as string,
+          })
+        );
+        return;
+      }
+      this.store.dispatch(clearSelectTodo());
+    });
   }
 
   public selectTodo(selectedTodo: Todo) {

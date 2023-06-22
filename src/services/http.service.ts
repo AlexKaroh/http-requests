@@ -20,13 +20,13 @@ export class HttpService {
     });
   }
 
-  public getUserTodos(userId: string) {
+  public getUserTodos(userId?: string) {
     return this.http.get<UserTodos>(`${URL}/todos/user/${userId}`, {
       withCredentials: true,
     });
   }
 
-  public addUserTodo(todo: string, userId: string) {
+  public addUserTodo(todo: string, userId?: string) {
     return this.http.post<Todo>(
       `${URL}/todos/add`,
       {

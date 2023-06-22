@@ -1,4 +1,5 @@
 /* eslint-disable @ngrx/on-function-explicit-return-type */
+
 import { createReducer, on } from '@ngrx/store';
 import * as TodoActions from './todo.actions';
 import { TodosState } from './todo.domain';
@@ -38,12 +39,12 @@ export const todoReducer = createReducer(
     },
   })),
 
-  on(TodoActions.addTodoSuccess, (state, { todo }) => ({
+  on(TodoActions.addTodoSuccess, (state, { newTodo }) => ({
     ...state,
     request: {
       status: 'success',
     },
-    todos: state.todos?.concat({ ...todo, isImmutable: true }),
+    todos: state.todos?.concat({ ...newTodo }),
   })),
 
   on(TodoActions.addTodoFailure, (state, { error }) => ({
@@ -89,8 +90,10 @@ export const todoReducer = createReducer(
     request: {
       status: 'success',
     },
-    todos: state.todos?.map((todo) =>
-      todo.id === editedTodo.id ? { ...todo, todo: newTodo } : todo
+    todos: state.todos?.map((todoElement) =>
+      todoElement.id === editedTodo.id
+        ? { ...todoElement, todo: newTodo }
+        : todoElement
     ),
   })),
 
@@ -104,11 +107,11 @@ export const todoReducer = createReducer(
 
   on(TodoActions.selectTodo, (state, { selectedTodo }) => ({
     ...state,
-    selectedTodo: selectedTodo
+    selectedTodo: selectedTodo,
   })),
 
   on(TodoActions.clearSelectTodo, (state) => ({
     ...state,
-    selectedTodo: null
-  })),
+    selectedTodo: null,
+  }))
 );
