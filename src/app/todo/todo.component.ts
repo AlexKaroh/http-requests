@@ -1,7 +1,6 @@
 /* eslint-disable @ngrx/prefer-action-creator-in-dispatch */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpService } from '../../services/http.service';
 import { Router, RouterModule } from '@angular/router';
 import { Todo } from 'src/interfaces/todo';
 import {
@@ -10,7 +9,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { exhaustMap, switchMap, take, tap } from 'rxjs';
+import { take, tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
   addTodo,
