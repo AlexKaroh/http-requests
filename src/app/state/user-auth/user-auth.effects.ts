@@ -25,8 +25,22 @@ export const loginSuccess$ = createEffect(
   (actions$ = inject(Actions), router = inject(Router)) => {
     return actions$.pipe(
       ofType(UserActions.loginSuccess),
-      tap(() => {
+      tap((user) => {
+        sessionStorage.setItem('id', user.userData.id as string)
         router.navigate(['todo']);
+      })
+    );
+  },
+  { functional: true, dispatch: false }
+);
+
+export const signOut$ = createEffect(
+  (actions$ = inject(Actions), router = inject(Router)) => {
+    return actions$.pipe(
+      ofType(UserActions.signOut),
+      tap(() => {
+        sessionStorage.removeItem('id');
+        router.navigate(['login']);
       })
     );
   },

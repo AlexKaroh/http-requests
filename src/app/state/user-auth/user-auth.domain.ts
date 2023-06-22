@@ -1,9 +1,9 @@
 import { UserData } from 'src/interfaces/user-data';
 
-type RequstStatus = 'loading' | 'success' | 'error';
+type RequestStatus = 'loading' | 'success' | 'error';
 
 export interface AuthState {
   user?: UserData;
-  status?: RequstStatus;
+  status?: RequestStatus;
   errorMessage?: string;
 }

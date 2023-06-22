@@ -1,4 +1,3 @@
-/* eslint-disable @ngrx/prefer-action-creator-in-dispatch */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -26,6 +25,7 @@ import {
   selectedTodoSelector,
 } from '../state/todos/todo.selector';
 import { userIdSelector } from '../state/user-auth/user-auth.selector';
+import { signOut } from '../state/user-auth/user-auth.action';
 
 @Component({
   selector: 'app-todo',
@@ -97,6 +97,6 @@ export class TodoComponent {
   }
 
   public signOut() {
-    this.router.navigate(['login']);
+    this.store.dispatch(signOut());
   }
 }

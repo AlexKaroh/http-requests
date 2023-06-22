@@ -15,11 +15,6 @@ export const userLoadingSelector = createSelector(
   (state) => state.status === 'loading'
 );
 
-export const userSuccessSelector = createSelector(
-  userSelector,
-  (state) => state.status === 'success'
-);
-
 export const userIdSelector = createSelector(
   userSelector,
   (state) => state.user?.id

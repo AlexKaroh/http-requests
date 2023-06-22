@@ -18,3 +18,7 @@ export const loginFailure = createAction(
   `${COMPONENT_NAME} Login failure`,
   props<{ error: string }>()
 );
+
+export const signOut = createAction(
+  `${COMPONENT_NAME} Sign Out`
+);
