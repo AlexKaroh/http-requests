@@ -9,10 +9,10 @@ export class UserService {
   userToken = sessionStorage.getItem('token');
 
   signIn(userData: UserData) {
-    this.userId = userData.id;
-    this.userToken = userData.token;
-    sessionStorage.setItem('id', userData.id);
-    sessionStorage.setItem('token', userData.token);
+    this.userId = userData.id  as string;
+    this.userToken = userData.token  as string;
+    sessionStorage.setItem('id', userData.id as string);
+    sessionStorage.setItem('token', userData.token  as string);
   }
 
   signOut() {
