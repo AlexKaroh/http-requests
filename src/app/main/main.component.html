@@ -1,0 +1,54 @@
+<main>
+  <div class="title">
+    <h1>Доставка товаров из Китая быстро и безопасно</h1>
+    <p>Морские, авиа и авто перевозки <br> для бизнеса и личного пользования</p>
+
+    <div class="btn-container">
+      <button class="button accent">
+        <img class="money-icon" src="../../assets/money.svg" alt="money">
+        <span>Рассчитать стоимость</span>
+      </button>
+      <button class="button">
+        <img class="phone-icon" src="../../assets/phone.svg" alt="phone">
+        <span>Связаться</span>
+      </button>
+    </div>
+
+    <ul>
+      <li>
+        <img class="check-icon" src="../../assets/check.svg" alt="check">
+        <p>5+ лет на рынке</p>
+      </li>
+      <li>
+        <img class="check-icon" src="../../assets/check.svg" alt="check">
+        <p>5000+ успешных сделок</p>
+      </li>
+      <li>
+        <img class="check-icon" src="../../assets/check.svg" alt="check">
+        <p>Склад в РБ</p>
+      </li>
+    </ul>
+  </div>
+
+    <div class="delivery-block">
+      <div class="delivery-title">
+        <h2>Способы доставки</h2>
+      </div>
+
+      <div class="delivery-items">
+        <div class="dil-item" *ngFor="let dil of deliveries">
+          <div class="dil-item-header">
+            <img class="check-icon" src="../../assets/check.svg" alt="check" />
+            <span class="dil-title">{{ dil.title }}</span>
+          </div>
+
+          <img class="dil-img" [src]="dil.img" alt="check" />
+
+          <div class="dil-desc">
+            <span class="dil-timing">{{ dil.timing }}</span>
+            <span class="dil-subdesc">{{ dil.subdesc }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+</main>

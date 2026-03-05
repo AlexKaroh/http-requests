@@ -17,5 +17,12 @@ export const ROUTES: Routes = [
         (mod) => mod.TodoComponent
       ),
   },
-  { path: '', redirectTo: '/todo', pathMatch: 'full' },
+  {
+    path: 'main',
+    loadComponent: () =>
+      import('./main/main.component').then(
+        (mod) => mod.MainComponent
+      ),
+  },
+  { path: '', redirectTo: '/main', pathMatch: 'full' },
 ];

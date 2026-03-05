@@ -1,9 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
 
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
 body, h1 {
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  width: 100%;
+
+  overflow-x: hidden;
   color: #fff;
   font-family: 'Lilita One', cursive;
   text-shadow: 0 -1px 0 #000000, 0 -1px 0 #000000, 0 1px 0 #000000, 0 1px 0 #000000, -1px 0 0 #000000, 1px 0 0 #000000, -1px 0 0 #000000, 1px 0 0 #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 1px 1px 0 #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 1px 1px 0 #000000;
@@ -15,7 +23,7 @@ body {
   align-items: center;
   position: relative;
   background-color: #007fc9;
-  overflow: hidden;
+
   height: 100vh;
 
   &::after{
@@ -55,10 +63,12 @@ body {
 }
 
 .button {
+  display: flex;
+  align-items: center;
+  padding: 12px;
   cursor: pointer;
-  width: 140px;
   height: 50px;
-  background-color: #007fc9;
+  background-color: #0088d8;
   box-shadow: 0 4px 4px #003f64;
   border: none;
   border-radius: 5px;
@@ -68,7 +78,11 @@ body {
   font-size: 25px;
   z-index: 5;
   transition: .3s;
-  
+
+  &.accent {
+    background: radial-gradient(circle, rgba(80, 185, 255, 0.699) 0%, rgba(0, 136, 216, 1) 100%);
+  }
+
   &:hover {
     background-color: #0275b9
   }
@@ -85,7 +99,7 @@ body {
   padding-left: 5px;
   font-size: 20px;
   border: 3px solid #fff;
-  
+
   &:focus {
     outline: none;
   }

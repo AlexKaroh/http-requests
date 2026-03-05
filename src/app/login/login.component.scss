@@ -1,22 +1,37 @@
 :host {
   display: flex;
   justify-content: center;
-  padding-top: 20%;
+  padding-top: 10%;
   overflow: hidden;
 
+  &::before,
   &::after {
     content: '';
-    margin-left: 10vw;
+    position: absolute;
+    top: -20vh;
     width: 24%;
     height: 815px;
-    position: absolute;
-    left: 45%;
     opacity: 0.5;
-    background-image: url(../../assets/cat.png);
     background-repeat: no-repeat;
     background-size: 60%;
-    animation: animatedFalling 20s linear infinite;
     z-index: 2;
+    pointer-events: none;
+  }
+
+  &::before {
+    top: -25vh;
+    left: -35vw;
+    background-image: url(../../assets/plane.png);
+    background-size: 70%;
+    animation: animatedPlaneFly 14s linear infinite;
+    animation-delay: -7s;
+  }
+
+  &::after {
+    left: 45%;
+    margin-left: 10vw;
+    background-image: var(--falling-image, url(../../assets/ousin-logo.png));
+    animation: animatedFalling 20s linear infinite;
   }
 }
 
@@ -62,5 +77,14 @@
   font-size: 30px;
   z-index: 7;
   color: #ff8675;
+}
+
+@keyframes animatedPlaneFly {
+  0% {
+    transform: translateX(0) translateY(0) rotate(-10deg);
+  }
+  100% {
+    transform: translateX(150vw) translateY(120vh) rotate(8deg);
+  }
 }
 

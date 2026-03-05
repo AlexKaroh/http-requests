@@ -13,16 +13,43 @@ import { Router } from '@angular/router';
 import { UserService } from 'src/services/user.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-main',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  templateUrl: './main.component.html',
+  styleUrls: ['./main.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent implements OnDestroy {
+export class MainComponent implements OnDestroy {
   private isRequestActive = new BehaviorSubject<boolean>(false);
   private subscription: Subscription = new Subscription();
+
+  deliveries = [
+    {
+      title: 'Автодоставка',
+      img: '../../assets/car.png',
+      timing: '7-14 дней',
+      subdesc: 'Оптимально по цене',
+    },
+    {
+      title: 'Авиадоставка',
+      img: '../../assets/airplane.png',
+      timing: '5-10 дней',
+      subdesc: 'Высокая скорость',
+    },
+    {
+      title: 'Морская доставка',
+      img: '../../assets/ship.png',
+      timing: '30-45 дней',
+      subdesc: 'Крупные партии',
+    },
+    {
+      title: 'Доставка почтой',
+      img: '../../assets/bagagge.png',
+      timing: '10-20 дней',
+      subdesc: 'Доставки для физ. лиц',
+    },
+  ];
 
   userDataGroup = this.fb.nonNullable.group({
     username: ['kminchelle', [Validators.required]],
