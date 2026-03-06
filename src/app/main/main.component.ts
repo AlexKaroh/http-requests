@@ -30,24 +30,28 @@ export class MainComponent implements OnDestroy {
       img: '../../assets/car.png',
       timing: '7-14 дней',
       subdesc: 'Оптимально по цене',
+      icon: '../../assets/truck-icon.svg'
     },
     {
       title: 'Авиадоставка',
       img: '../../assets/airplane.png',
       timing: '5-10 дней',
       subdesc: 'Высокая скорость',
+      icon: '../../assets/plane-icon.svg'
     },
     {
       title: 'Морская доставка',
       img: '../../assets/ship.png',
       timing: '30-45 дней',
       subdesc: 'Крупные партии',
+      icon: '../../assets/ship-icon.svg'
     },
     {
       title: 'Доставка почтой',
       img: '../../assets/bagagge.png',
       timing: '10-20 дней',
       subdesc: 'Доставки для физ. лиц',
+      icon: '../../assets/package-icon.svg'
     },
   ];
 
